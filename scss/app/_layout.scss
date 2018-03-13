@@ -1,0 +1,13 @@
+body {
+	& > header {
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+	}
+
+	& > main {
+		@media screen and (min-width:$break-large) {
+			width     : $break-large;
+			margin    : auto;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+		}
+	}
+}

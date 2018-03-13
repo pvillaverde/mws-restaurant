@@ -1,11 +1,11 @@
-var gulp = require('gulp'),
+const gulp = require('gulp'),
 	conf = require('./conf'),
 	$ = require('gulp-load-plugins')({
 		pattern: ['gulp-*']
 	});
 
-gulp.task('watch', ['sass'], function() {
-	gulp.watch(conf.paths.sass, function(obj) {
+gulp.task('watch', ['sass'], () => {
+	gulp.watch(`${conf.paths.sass}/*/*.scss`, (obj) => {
 		console.log("Updating SASS", obj.path);
 		gulp.start('sass');
 	});
