@@ -5,6 +5,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+		<link rel="stylesheet" src="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
 		<link rel="stylesheet" href="assets/css/styles.css">
 		<title>Restaurant Reviews</title>
 	</head>
@@ -19,9 +20,9 @@
 		</header>
 
 		<main id="maincontent">
-			<section id="map-container">
+			<aside id="map-container">
 				<div id="map"></div>
-			</section>
+			</aside>
 			<section>
 				<div class="filter-options">
 					<h2>Filter Results</h2>
@@ -34,17 +35,17 @@
 				</div>
 				<ul id="restaurants-list"></ul>
 			</section>
+			<footer id="footer">
+				Copyright © 2017
+				<a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+			</footer>
 		</main>
 
 		<script charset="utf-8" src="app/dbhelper.js"></script>
-		<script charset="utf-8" src="app/app.js"></script>
+		<script charset="utf-8" src="app/main.js"></script>
 		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnpXTRc4VnjfrA6lesKaIJuYLsa_UcJpo&libraries=places&callback=initMap"></script>
 
 
-		<footer id="footer">
-			Copyright (c) 2017
-			<a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
-		</footer>
 
 	</body>
 
