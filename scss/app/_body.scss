@@ -1,8 +1,23 @@
+body {
+	& > header {
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+	}
+
+	& > main {
+		background-color: #f3f3f3;
+		@media screen and (min-width:$break-large) {
+			width     : $break-large;
+			margin    : auto;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+		}
+	}
+}
 /* ====================== Navigation ====================== */
+
 nav {
 	width           : 100%;
 	height          : 80px;
-	background-color: #252831;
+	background-color: $primary;
 	text-align      : center;
 
 	h1 {
@@ -32,7 +47,7 @@ nav {
 		&+li:before {
 			padding: 8px;
 			color  : black;
-			content: "/\00a0";
+			content: '/\00a0';
 		}
 		/* Add a color to all links inside the list */
 		a {
@@ -45,4 +60,25 @@ nav {
 			}
 		}
 	}
+}
+
+#maincontent {
+	background-color: #f3f3f3;
+	min-height      : 100%;
+}
+
+#footer {
+	background-color: #444;
+	color           : #aaa;
+	font-size       : 8pt;
+	letter-spacing  : 1px;
+	padding         : 25px;
+	text-align      : center;
+	text-transform  : uppercase;
+}
+/* ====================== Map ====================== */
+#map {
+	height          : 400px;
+	width           : 100%;
+	background-color: #ccc;
 }

@@ -1,7 +1,9 @@
 /* paths relative to www/assets/css */
-$assets-root : '../';
-$images-root : $assets-root + 'img/'; //;
+$assets-root       : '../';
+$images-root       : $assets-root + 'img/'; //;
 /*	Breakpoints */
-$break-small : 600px;
-$break-medium: 960px;
-$break-large : 1200px;
+$break-small       : 600px;
+$break-medium      : 960px;
+$break-large       : 1200px; //;
+/* Other*/
+$padding-horizontal: 0 10px;
