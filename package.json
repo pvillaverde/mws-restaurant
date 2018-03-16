@@ -13,6 +13,7 @@
     "gulp-inject": "^4.3.1",
     "gulp-load-plugins": "^1.5.0",
     "gulp-rename": "^1.2.2",
+    "gulp-responsive-images": "0.0.3",
     "gulp-sass": "^3.1.0",
     "gulp-util": "^3.0.8",
     "wrench": "^1.5.9"

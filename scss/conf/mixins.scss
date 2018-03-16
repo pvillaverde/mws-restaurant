@@ -14,34 +14,24 @@
 @function shade($color, $percentage) {
 	@return mix(black, $color, $percentage);
 }
-/*@mixin respond-to($media) {
-	@if $media == handhelds {
-		@media only screen and (max-width: $break-small) {
-			@content;
-		}
-	} @else
-	if $media == medium-screens {
-		@media only screen and (min-width: $break-small + 1) and (max-width: $break-large - 1) {
-			@content;
-		}
-	} @else
-	if $media == wide-screens {
-		@media only screen and (min-width: $break-large) {
-			@content;
+/// Creates Rating semantic meter
+/// @access public
+/// @param {Number} $max - Max Score the rating can have
+/// @param {String} $emptySymbol - Symbol that will represent empty state.
+/// @param {String} $fillSymbol - Symbol that will represent full state.
+/// Generates rules
+@mixin createRating($max,$emptySymbol,$fillSymbol) {
+	@for $value from 1 through $max {
+		&[value="#{$value}"]::before {
+			$c     : '';
+			@for $i from 1 through $max {
+				@if $i <= $value {
+					$c: $c + $fillSymbol;
+				} @else {
+					$c: $c + $emptySymbol;
+				}
+			}
+			content: $c;
 		}
 	}
 }
-
-.profile-pic {
-	float: left;
-	width: 250px;
-	@include respond-to(handhelds) {
-		width: 100%;
-	}
-	@include respond-to(medium-screens) {
-		width: 125px;
-	}
-	@include respond-to(wide-screens) {
-		float: none;
-	}
-}*/

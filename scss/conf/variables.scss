@@ -2,6 +2,7 @@
 $assets-root       : '../';
 $images-root       : $assets-root + 'img/'; //;
 /*	Breakpoints */
+$break-xsmall      : 480px;
 $break-small       : 600px;
 $break-medium      : 960px;
 $break-large       : 1200px; //;

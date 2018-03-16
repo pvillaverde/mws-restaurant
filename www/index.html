@@ -21,11 +21,12 @@
 				</h1>
 			</nav>
 		</header>
-		<main id="maincontent">
-			<aside id="map-container">
+		<a class="skip-map" href="#restaurants-section">Skip map and go to restaurants</a>
+		<main>
+			<aside>
 				<div id="map"></div>
 			</aside>
-			<section>
+			<section id="restaurants-section">
 				<fieldset class="filter-options" aria-label="Filter results">
 					<legend class="icon ion-levels">Filter results</legend>
 					<select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Select a neighborhood">
@@ -40,6 +41,7 @@
 			<footer id="footer">
 				Copyright © 2018
 				<a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+				<a class="back-top" href="#top">Back to top</a>
 			</footer>
 		</main>
 
