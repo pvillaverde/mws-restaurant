@@ -136,14 +136,20 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 createRestaurantHTML = (restaurant) => {
 	restaurant.rating = getRestaurantRating(restaurant);
-
+	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, "");
+	const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split('.').pop();
 	const li = document.createElement('li');
 	li.innerHTML = `
 		<a href="${DBHelper.urlForRestaurant(restaurant)}" aria-label="Check operating hours and reviews">
 			<figure>
 				<picture>
-					<source srcset="" sizes=""></source>
-					<img src="${DBHelper.imageUrlForRestaurant(restaurant)}" alt="${restaurant.name}'s restaurant photo">
+					<source media="(max-width: 600px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+							sizes="100vw"></source>
+					<source media="(max-width: 960px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+							sizes="50vw"></source>
+					<source media="(min-width: 960px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+							sizes="360px"></source>
+					<img src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
 				</picture>
 				<figcaption>
 					<h1>${restaurant.name} <span class="pull-right icon ion-android-favorite" aria-label="Average rating">${restaurant.rating}</span></h1>

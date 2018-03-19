@@ -25,6 +25,6 @@ gulp.task('sass', (done) => {
 			keepSpecialComments: 0
 		}))
 		.pipe($.concat('styles.css'))
-		.pipe(gulp.dest(conf.paths.dest + '/assets/css/'))
+		.pipe(gulp.dest(`${conf.paths.dest}/assets/css/`))
 		.on('end', done);
 });

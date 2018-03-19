@@ -12,4 +12,4 @@ wrench.readdirSyncRecursive('./gulp')
 	.map((file) => require('./gulp/' + file));
 
 
-gulp.task('default', ['sass']);
+gulp.task('default', ['images', 'sass']);

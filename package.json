@@ -6,16 +6,19 @@
     "gulp": "^3.9.1"
   },
   "devDependencies": {
+    "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.9.3",
     "gulp-concat": "^2.6.1",
+    "gulp-debug": "^3.2.0",
     "gulp-flatten": "^0.4.0",
     "gulp-inject": "^4.3.1",
     "gulp-load-plugins": "^1.5.0",
     "gulp-rename": "^1.2.2",
-    "gulp-responsive-images": "0.0.3",
+    "gulp-responsive": "^2.9.0",
     "gulp-sass": "^3.1.0",
     "gulp-util": "^3.0.8",
+    "sharp": "^0.20.1",
     "wrench": "^1.5.9"
   },
   "keywords": [
