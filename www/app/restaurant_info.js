@@ -5,44 +5,36 @@ var map;
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
-	fetchRestaurantFromURL((error, restaurant) => {
-		if (error) { // Got an error!
-			console.error(error);
-		} else {
-			self.map = new google.maps.Map(document.getElementById('map'), {
-				zoom: 16,
-				center: restaurant.latlng,
-				scrollwheel: false
-			});
-			/*fillBreadcrumb();*/
-			DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-		}
-	});
+	fetchRestaurantFromURL().then((restaurant) => {
+		self.map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 16,
+			center: restaurant.latlng,
+			scrollwheel: false
+		});
+		/*fillBreadcrumb();*/
+		DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+	}).catch((error) => console.error(error));
 }
 
 /**
  * Get current restaurant from page URL.
  */
-fetchRestaurantFromURL = (callback) => {
-	if (self.restaurant) { // restaurant already fetched!
-		callback(null, self.restaurant)
-		return;
-	}
+fetchRestaurantFromURL = () => {
 	const id = getParameterByName('id');
-	if (!id) { // no id found in URL
-		error = 'No restaurant id in URL'
-		callback(error, null);
-	} else {
-		DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-			self.restaurant = restaurant;
-			if (!restaurant) {
-				console.error(error);
-				return;
-			}
-			fillRestaurantHTML();
-			callback(null, restaurant)
-		});
-	}
+	const promise = new Promise((resolve, reject) => {
+		if (self.restaurant) { // restaurant already fetched!
+			reject(self.restaurant);
+		} else if (!id) {
+			reject('No restaurant id in URL');
+		} else {
+			DBHelper.fetchRestaurantById(id).then((restaurant) => {
+				self.restaurant = restaurant;
+				fillRestaurantHTML();
+				resolve(restaurant);
+			}).catch((error) => reject(error));
+		}
+	});
+	return promise;
 }
 
 /**
@@ -113,7 +105,7 @@ createReviewHTML = (review) => {
 	article.innerHTML = `
 		<author>${review.name}</author>
 		<time datetime="${review.date}">${review.date}</time>
-		<meter max="5" value="${review.rating}"></meter>
+		<meter max="5" value="${review.rating}" aria-label="Rating ${review.rating} out of 5"></meter>
 		<p>${review.comments}</p>`;
 	return article;
 }

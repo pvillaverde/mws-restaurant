@@ -8,22 +8,32 @@ var markers = []
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
+	_registerServiceWorker();
 	fetchNeighborhoods();
 	fetchCuisines();
+
 });
+/**
+ * Register service worker
+ */
+_registerServiceWorker = () => {
+	if (!navigator.serviceWorker) return;
+
+	navigator.serviceWorker.register('/sw.js').then((reg) => {
+		console.log('SW registered');
+	}).catch((error) => {
+		console.log('SW registration failed', error);
+	});
+}
 
 /**
  * Fetch all neighborhoods and set their HTML.
  */
 fetchNeighborhoods = () => {
-	DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-		if (error) { // Got an error
-			console.error(error);
-		} else {
-			self.neighborhoods = neighborhoods;
-			fillNeighborhoodsHTML();
-		}
-	});
+	DBHelper.fetchNeighborhoods().then((neighborhoods) => {
+		self.neighborhoods = neighborhoods;
+		fillNeighborhoodsHTML();
+	}).catch((error) => console.error(error))
 }
 
 /**
@@ -43,14 +53,10 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
  * Fetch all cuisines and set their HTML.
  */
 fetchCuisines = () => {
-	DBHelper.fetchCuisines((error, cuisines) => {
-		if (error) { // Got an error!
-			console.error(error);
-		} else {
-			self.cuisines = cuisines;
-			fillCuisinesHTML();
-		}
-	});
+	DBHelper.fetchCuisines().then((cuisines) => {
+		self.cuisines = cuisines;
+		fillCuisinesHTML();
+	}).catch((error) => console.error(error))
 }
 
 /**
@@ -95,14 +101,11 @@ updateRestaurants = () => {
 	const cuisine = cSelect[cIndex].value;
 	const neighborhood = nSelect[nIndex].value;
 
-	DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
-		if (error) { // Got an error!
-			console.error(error);
-		} else {
-			resetRestaurants(restaurants);
-			fillRestaurantsHTML();
-		}
-	})
+	DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood).then((restaurants) => {
+		resetRestaurants(restaurants);
+		fillRestaurantsHTML();
+	}).catch((error) => console.error(error))
+
 }
 
 /**
@@ -140,7 +143,7 @@ createRestaurantHTML = (restaurant) => {
 	const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split('.').pop();
 	const li = document.createElement('li');
 	li.innerHTML = `
-		<a href="${DBHelper.urlForRestaurant(restaurant)}" aria-label="Check operating hours and reviews">
+		<a href="${DBHelper.urlForRestaurant(restaurant)}" aria-label="${restaurant.name}">
 			<figure>
 				<picture>
 					<source media="(max-width: 600px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
@@ -161,7 +164,7 @@ createRestaurantHTML = (restaurant) => {
 			</figure>
 		</a>`;
 
-	return li
+	return li;
 }
 /*
  * Get rating average for restaurant from its reviews
