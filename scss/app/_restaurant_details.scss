@@ -140,18 +140,18 @@ article#restaurant-container {
 					color    : #666;
 				}
 
-				meter {
-					all  : unset;
-					float: right;
-					color: red;
-					@include createRating(5,♡,❤);
-					//@include createRating(5,☆,⭐);
-				}
-
 				p {
 					text-align: justify;
 				}
 			}
 		}
 	}
+}
+
+.meter-5-hearth {
+	@include createRating(5,♡,❤, red);
+}
+
+.meter-5-start {
+	@include createRating(5,☆,⭐, yellow);
 }
