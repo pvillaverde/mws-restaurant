@@ -2,6 +2,12 @@ let restaurant;
 var map;
 
 /**
+ * Fetch neighborhoods and cuisines as soon as the page is loaded.
+ */
+document.addEventListener('DOMContentLoaded', (event) => {
+	fetchRestaurantFromURL();
+});
+/**
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
@@ -23,7 +29,7 @@ fetchRestaurantFromURL = () => {
 	const id = getParameterByName('id');
 	const promise = new Promise((resolve, reject) => {
 		if (self.restaurant) { // restaurant already fetched!
-			reject(self.restaurant);
+			resolve(self.restaurant);
 		} else if (!id) {
 			reject('No restaurant id in URL');
 		} else {

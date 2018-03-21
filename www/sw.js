@@ -1,4 +1,4 @@
-const staticCacheName = 'restaurants-static-v5';
+const staticCacheName = 'restaurants-static-v9';
 const contentImgsCache = 'restaurants-content-imgs';
 const allCaches = [staticCacheName, contentImgsCache];
 
@@ -8,14 +8,18 @@ console.log("Started Service Worker: %s", staticCacheName);
 self.addEventListener('install', (event) => {
 	const urlsToCache = [
 		'/',
+		'/restaurant.html',
 		'/app/dbhelper.js',
 		'/app/main.js',
 		'/app/restaurant_info.js',
 		'/app/restaurants_index.js',
 		'/assets/favicon.ico',
 		'/assets/css/styles.css',
+		'/data/restaurants.json',
 		'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css',
 		'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css',
+		'https://code.ionicframework.com/ionicons/2.0.1/fonts/ionicons.woff?v=2.0.1',
+		'https://code.ionicframework.com/ionicons/2.0.1/fonts/ionicons.ttf?v=2.0.1'
 	]
 	event.waitUntil(
 		caches.open(staticCacheName).then((cache) => cache.addAll(urlsToCache))
@@ -45,6 +49,10 @@ self.addEventListener('fetch', (event) => {
 	if (requestUrl.origin === location.origin) {
 		if (requestUrl.pathname.startsWith('/assets/img/')) {
 			event.respondWith(serveImage(event.request));
+			return;
+		}
+		if (requestUrl.pathname.startsWith('/restaurant.html')) {
+			event.respondWith(caches.match('/restaurant.html'));
 			return;
 		}
 	}

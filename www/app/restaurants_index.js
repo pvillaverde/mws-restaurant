@@ -10,6 +10,7 @@ var markers = []
 document.addEventListener('DOMContentLoaded', (event) => {
 	fetchNeighborhoods();
 	fetchCuisines();
+	updateRestaurants();
 
 });
 
@@ -72,7 +73,7 @@ window.initMap = () => {
 		zoom: 12,
 		center: loc,
 	});
-	updateRestaurants();
+	addMarkersToMap();
 }
 
 /**
@@ -165,6 +166,7 @@ getRestaurantRating = (restaurant) => {
  * Add markers for current restaurants to the map.
  */
 addMarkersToMap = (restaurants = self.restaurants) => {
+	if (!self.map) return;
 	restaurants.forEach(restaurant => {
 		// Add marker to the map
 		const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
