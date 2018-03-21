@@ -1,4 +1,5 @@
 /* ====================== Restaurant Filtering ====================== */
+
 fieldset.filter-options {
 	text-align      : center;
 	padding-top     : 50px;
@@ -25,7 +26,6 @@ fieldset.filter-options {
 		background-color: $secondary-light-light;
 		border          : 1px solid #fff;
 		font-family     : Arial, sans-serif;
-		font-size       : 11pt;
 		height          : 35px;
 		letter-spacing  : 0;
 		margin          : 10px;
@@ -34,7 +34,6 @@ fieldset.filter-options {
 	}
 }
 /* ====================== Restaurant Listing ====================== */
-
 #restaurants-list {
 	display   : flex;
 	flex-flow : row wrap;
@@ -75,7 +74,7 @@ fieldset.filter-options {
 				padding: 0 10px 10px;
 
 				h1 {
-					color         : $secondary;
+					color         : $secondary-dark-dark;
 					font-family   : Arial, sans-serif;
 					font-size     : 16px;
 					font-weight   : 200;
@@ -86,7 +85,7 @@ fieldset.filter-options {
 				}
 
 				.ion-android-favorite {
-					color: grey;
+					color: #585858;
 
 					&::before {
 						color  : red;

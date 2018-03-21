@@ -17,7 +17,7 @@ class DBHelper {
 	 * Fetch all restaurants.
 	 */
 	static fetchRestaurants() {
-		const promise = new Promise((resolve, reject) => {
+		/*const promise = new Promise((resolve, reject) => {
 			let xhr = new XMLHttpRequest();
 			xhr.open('GET', DBHelper.DATABASE_URL);
 			xhr.onload = () => {
@@ -32,12 +32,12 @@ class DBHelper {
 			};
 			xhr.send();
 		});
-		return promise;
+		return promise;*/
 
-		/* NOT WORKING ON python SimpleHTTPServer */
-		/*return fetch(DBHelper.DATABASE_URL)
+		/* NOT WORKING ON python SimpleHTTPServer. It does work with npm http-server */
+		return fetch(DBHelper.DATABASE_URL)
 			.then((response) => response.json())
-			.then((json) => json.restaurants);*/
+			.then((json) => json.restaurants);
 	}
 
 	/**
