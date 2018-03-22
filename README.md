@@ -51,3 +51,10 @@ Run server with npm's http-server. I've had some issues with SimpleHTTPServer an
 ```sh
 http-server -p 8000
 ```
+
+## Built With
+
+* Gulp (Full list on gulp-dependencies on package.json)
+* Sass
+* [NormalizeCSS](https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css)
+* [IonIcons](http://ionicons.com/)
