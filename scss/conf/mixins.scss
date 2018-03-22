@@ -1,0 +1,63 @@
+/// Slightly lighten a color
+/// @access public
+/// @param {Color} $color - color to tint
+/// @param {Number} $percentage - percentage of `$color` in returned color
+/// @return {Color}
+@function tint($color, $percentage) {
+	@return mix(white, $color, $percentage);
+}
+/// Slightly darken a color
+/// @access public
+/// @param {Color} $color - color to shade
+/// @param {Number} $percentage - percentage of `$color` in returned color
+/// @return {Color}
+@function shade($color, $percentage) {
+	@return mix(black, $color, $percentage);
+}
+/// Creates Rating semantic meter
+/// @access public
+/// @param {Number} $max - Max Score the rating can have
+/// @param {String} $emptySymbol - Symbol that will represent empty state.
+/// @param {String} $fillSymbol - Symbol that will represent full state.
+/// Generates rules
+@mixin createRating($max,$emptySymbol,$fillSymbol, $color) {
+	all               : unset;
+	-webkit-appearance: none;
+
+	&::-webkit-meter-bar,
+	&::-webkit-meter-even-less-good-value,
+	&::-webkit-meter-inner-element,
+	&::-webkit-meter-optimum-value,
+	&::-webkit-meter-suboptimum-value {
+		background: none;
+	}
+
+	&::-moz-meter-bar {
+		-moz-appearance: none;
+	}
+
+	&:-moz-meter-optimum::-moz-meter-bar,
+	&:-moz-meter-sub-optimum::-moz-meter-bar,
+	&:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+		background: none;
+	}
+	display           : none;
+
+	& + span {
+		float: right;
+		color: $color;
+	}
+	@for $value from 1 through $max {
+		&[value="#{$value}"] + span::before {
+			$c     : '';
+			@for $i from 1 through $max {
+				@if $i <= $value {
+					$c: $c + $fillSymbol;
+				} @else {
+					$c: $c + $emptySymbol;
+				}
+			}
+			content: $c;
+		}
+	}
+}

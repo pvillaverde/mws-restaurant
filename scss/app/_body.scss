@@ -1,0 +1,85 @@
+body {
+	& > header {
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+
+		nav {
+			width           : 100%;
+			height          : 80px;
+			background-color: $primary;
+			text-align      : center;
+
+			h1 {
+				margin: auto;
+
+				a {
+					color         : #fff;
+					font-size     : 14pt;
+					font-weight   : 200;
+					letter-spacing: 10px;
+					text-transform: uppercase;
+				}
+			}
+		}
+	}
+
+	& > main {
+		background-color: #f3f3f3;
+		@media screen and (min-width:$break-large) {
+			width     : $break-large;
+			margin    : auto;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+		}
+
+		& > footer {
+			background-color: #444;
+			color           : #eaeaea;
+			letter-spacing  : 1px;
+			padding         : 25px;
+			text-align      : center;
+			text-transform  : uppercase;
+		}
+	}
+}
+/* ====================== Map ====================== */
+a.back-top {
+	display: block;
+}
+
+a.skip-map {
+	left    : -999px;
+	position: absolute;
+	top     : auto;
+	width   : 1px;
+	height  : 1px;
+	overflow: hidden;
+	z-index : -999;
+
+	&:active,
+	&:focus {
+		color           : #fff;
+		background-color: $primary-light;
+		left            : auto;
+		top             : auto;
+		width           : 30%;
+		height          : auto;
+		overflow        : auto;
+		margin          : 10px 35%;
+		padding         : 5px;
+		border-radius   : 15px;
+		border          : 4px solid $info;
+		text-align      : center;
+		font-size       : 1.2em;
+		z-index         : 999;
+	}
+}
+
+#map {
+	height          : 400px;
+	width           : 100%;
+	background-color: #ccc;
+}
+/* ====================== Helpers ====================== */
+
+.pull-right {
+	float: right;
+}

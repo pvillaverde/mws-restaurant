@@ -1,0 +1,10 @@
+/* paths relative to www/assets/css */
+$assets-root       : '../';
+$images-root       : $assets-root + 'img/'; //;
+/*	Breakpoints */
+$break-xsmall      : 480px;
+$break-small       : 600px;
+$break-medium      : 960px;
+$break-large       : 1200px; //;
+/* Other*/
+$padding-horizontal: 0 10px;
