@@ -1,37 +1,39 @@
 {
-  "name": "mws_restaurants_app_pvc",
-  "version": "1.0.0",
-  "description": "Mobile Web Specialist Nanodegree Project 2018",
-  "dependencies": {
-    "gulp": "^3.9.1"
-  },
-  "devDependencies": {
-    "del": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-clean-css": "^3.9.3",
-    "gulp-concat": "^2.6.1",
-    "gulp-debug": "^3.2.0",
-    "gulp-flatten": "^0.4.0",
-    "gulp-inject": "^4.3.1",
-    "gulp-load-plugins": "^1.5.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-responsive": "^2.9.0",
-    "gulp-sass": "^3.1.0",
-    "gulp-util": "^3.0.8",
-    "sharp": "^0.20.1",
-    "wrench": "^1.5.9"
-  },
-  "keywords": [
-    "udacity",
-    "mws",
-    "mobile",
-    "web",
-    "specialist",
-    "nanodegree",
-    "project",
-    "restaurants",
-    "app"
-  ],
-  "author": "Pablo A. Villaverde Castro",
-  "license": "MIT"
+	"name": "mws_restaurants_app_pvc",
+	"version": "1.0.1",
+	"description": "Mobile Web Specialist Nanodegree Project 2018",
+	"dependencies": {},
+	"devDependencies": {
+		"del": "^3.0.0",
+		"gulp": "^3.9.1",
+		"gulp-clean-css": "^3.9.3",
+		"gulp-concat": "^2.6.1",
+		"gulp-debug": "^3.2.0",
+		"gulp-flatten": "^0.4.0",
+		"gulp-inject": "^4.3.1",
+		"gulp-load-plugins": "^1.5.0",
+		"gulp-rename": "^1.2.2",
+		"gulp-responsive": "^2.9.0",
+		"gulp-sass": "^3.1.0",
+		"gulp-util": "^3.0.8",
+		"sharp": "^0.20.1",
+		"wrench": "^1.5.9"
+	},
+	"keywords": [
+		"udacity",
+		"mws",
+		"mobile",
+		"web",
+		"specialist",
+		"nanodegree",
+		"project",
+		"restaurants",
+		"app"
+	],
+	"author": "Pablo A. Villaverde Castro",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/pvillaverde/mws-restaurant/"
+	},
+	"license": "MIT"
 }
