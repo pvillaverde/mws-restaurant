@@ -1,3 +1,4 @@
+/*eslint-env node*/
 /**
  *  This file contains the variables used in other gulp files
  *  which defines tasks
@@ -6,15 +7,16 @@
  *  of the tasks
  */
 
-var gutil = require('gulp-util');
+var gutil = require(`gulp-util`);
 
 /**
  *  The main paths of your project handle these with care
  */
 exports.paths = {
-	dest: 'www',
-	sass: 'scss',
-	tmp: '.tmp'
+	src: `src`,
+	dest: `www`,
+	sass: `scss`,
+	tmp: `.tmp`
 };
 /**
  *  Common implementation for an error handler of a Gulp plugin
@@ -23,7 +25,7 @@ exports.errorHandler = (title) => {
 	'use strict';
 
 	return (err) => {
-		gutil.log(gutil.colors.red('[' + title + ']'), err.toString());
-		this.emit('end');
+		gutil.log(gutil.colors.red(`[` + title + `]`), err.toString());
+		this.emit(`end`);
 	};
 };
