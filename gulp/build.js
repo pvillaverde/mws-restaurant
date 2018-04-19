@@ -6,29 +6,37 @@ const gulp = require(`gulp`),
 		pattern: [`gulp-*`, `del`]
 	});
 
-gulp.task(`build`, [`copy-default`, `build-scripts`, `sass`, `images`], () => {
+gulp.task(`build`, [`lint`, `copy-default`, `build-scripts`, `sass`, `images`], () => {
 
 });
 
-gulp.task(`copy-default`, [`copy-html`, `copy-data`, `copy-sw`]);
+gulp.task(`copy-default`, [`copy-html`, `copy-css`, `copy-fonts`, `copy-sw`]);
 gulp.task(`copy-html`, () => {
 	return gulp.src([`${conf.paths.src}/**/*.html`])
 		.pipe(gulp.dest(conf.paths.dest));
 });
-gulp.task(`copy-data`, () => {
-	return gulp.src([`${conf.paths.src}/**/*.json`])
+gulp.task(`copy-css`, () => {
+	return gulp.src([`${conf.paths.src}/**/*.css`])
+		.pipe(gulp.dest(conf.paths.dest));
+});
+gulp.task(`copy-fonts`, () => {
+	return gulp.src([`${conf.paths.src}/**/*.{eot,svg,ttf,woff,woff2}`])
 		.pipe(gulp.dest(conf.paths.dest));
 });
 gulp.task(`copy-sw`, () => {
 	return gulp.src([`${conf.paths.src}/sw.js`])
 		.pipe(gulp.dest(conf.paths.dest));
 });
+gulp.task(`copy-scripts`, () => {
+	return gulp.src([`${conf.paths.src}/app/**/*.js`])
+		.pipe(gulp.dest(`${conf.paths.dest}/app/`));
+});
 gulp.task(`build-scripts`, () => {
 	return gulp.src([`${conf.paths.src}/app/**/*.js`])
 		.pipe($.sourcemaps.init())
 		.pipe($.babel({
 			presets: [`env`],
-			plugins: [`es6-promise`]
+			/*plugins: [`es6-promise`]*/
 		}))
 		/*.pipe($.concat(`main.js`))*/
 		.pipe($.uglify().on(`error`, conf.errorHandler))
@@ -40,4 +48,15 @@ gulp.task(`clean`, () => {
 	return $.del([`${conf.paths.dest}/`], {
 		force: true
 	});
+});
+
+gulp.task(`lint`, () => {
+	return gulp.src([`${conf.paths.src}/app/**/*.js`])
+		// Check
+		.pipe($.eslint())
+		//Output result
+		.pipe($.eslint.format())
+		//Exit with error and pipe to fail
+		.pipe($.eslint.failOnError());
+
 });

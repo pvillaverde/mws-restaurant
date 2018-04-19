@@ -6,6 +6,8 @@ module.exports = {
 	"globals": {
 		"google": true,
 		"DBHelper": true,
+		"module": true,
+		"idb": true,
 	},
 	"extends": "eslint:recommended",
 	"rules": {

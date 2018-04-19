@@ -4,7 +4,7 @@ var map;
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
-document.addEventListener(`DOMContentLoaded`, (event) => {
+document.addEventListener(`DOMContentLoaded`, ( /*event*/ ) => {
 	fetchRestaurantFromURL();
 });
 /**
@@ -17,7 +17,6 @@ window.initMap = () => {
 			center: restaurant.latlng,
 			scrollwheel: false
 		});
-		/*fillBreadcrumb();*/
 		DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
 	}).catch((error) => console.error(error));
 };
@@ -48,13 +47,15 @@ function fetchRestaurantFromURL() {
  */
 function fillRestaurantHTML(restaurant = self.restaurant) {
 	const name = document.getElementById(`restaurant-name`);
+	if (name.innerHTML != ``) return;
 	name.innerHTML = restaurant.name;
 
 	const address = document.getElementById(`restaurant-address`);
 	address.innerHTML = restaurant.address;
 
 	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, ``);
-	const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();
+	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
+	const imageFileExtension = `jpg`;
 	const imageContainer = document.getElementById(`img-container`);
 	imageContainer.innerHTML = `<picture>
 			<source media="(max-width: 600px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"

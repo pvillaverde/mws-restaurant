@@ -128,7 +128,8 @@ function fillRestaurantsHTML(restaurants = self.restaurants) {
 function createRestaurantHTML(restaurant) {
 	restaurant.rating = getRestaurantRating(restaurant);
 	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, ``);
-	const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();
+	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
+	const imageFileExtension = `jpg`;
 	const li = document.createElement(`li`);
 	li.innerHTML = `
 		<a href="${DBHelper.urlForRestaurant(restaurant)}" aria-label="${restaurant.name}">
@@ -166,7 +167,7 @@ function getRestaurantRating(restaurant) {
  * Add markers for current restaurants to the map.
  */
 function addMarkersToMap(restaurants = self.restaurants) {
-	if (!self.map) return;
+	if (!self.map || !restaurants) return;
 	restaurants.forEach(restaurant => {
 		// Add marker to the map
 		const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);

@@ -3,30 +3,42 @@ const gulp = require(`gulp`),
 	conf = require(`./conf`),
 	browserSync = require(`browser-sync`).create(),
 	$ = require(`gulp-load-plugins`)({
-		pattern: [`gulp-*`]
+		pattern: [`gulp-*`, `compression`]
 	});
 
-gulp.task(`watch`, [`images`, `sass`], () => {
-	gulp.watch(`${conf.paths.sass}/*/*.scss`, (obj) => {
-		console.log(`Updating SASS`, obj.path);
-		gulp.start(`sass`);
-	}).on(`change`, () => browserSync.reload());
+gulp.task(`dev-watch`, [`copy-default`, `copy-scripts`, `images`, `sass`], () => {
 	browserSync.init({
-		server: `www/`,
+		server: {
+			baseDir: `www/`,
+			middleware: [$.compression()]
+		},
+		/*proxy: {
+			target: `localhost:1337`,
+			middleware: [$.compression()]
+		},*/
 		port: 8000,
 	});
 	browserSync.stream();
+	gulp.watch(`${conf.paths.src}/**/*.js`, function(obj) {
+		console.log(`Updating JS: `, obj.path);
+		gulp.src(obj.path, {
+				"base": conf.paths.src
+			})
+			.pipe(gulp.dest(conf.paths.dest));
+	}).on(`change`, () => browserSync.reload());
+	gulp.watch(`${conf.paths.src}/**/*.html`, function(obj) {
+		console.log(`Updating HTML: `, obj.path);
+		gulp.src(obj.path, {
+				"base": conf.paths.src
+			})
+			.pipe(gulp.dest(conf.paths.dest));
+	}).on(`change`, () => browserSync.reload());
+	gulp.watch(`${conf.paths.sass}/**/*.scss`, function(obj) {
+		console.log(`Updating SASS`, obj.path);
+		gulp.start(`sass`);
+	}).on(`change`, () => browserSync.reload());
 });
-gulp.task(`lint`, () => {
-	gulp.src([`${conf.paths.src}/app/**/*.js`])
-		// Check
-		.pipe($.eslint())
-		//Output result
-		.pipe($.eslint.format())
-		//Exit with error and pipe to fail
-		.pipe($.eslint.failOnError());
 
-});
 gulp.task(`tests`, () => {
 	gulp.src([`${conf.paths.src}/tests/extraSpec.js`])
 		.pipe($.jasmine({
