@@ -5,12 +5,17 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<meta name="description" content="Restaurants in the NW City Area rated by users. Choose wisely!">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" />
-		<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
-		<link rel="stylesheet" href="assets/css/styles.css">
+		<meta name="theme-color" content="#202929">
+		<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" />
+		<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />-->
+		<link rel="stylesheet" href="assets/css/normalize.min.css" />
+		<link rel="stylesheet" href="assets/css/ionicons.min.css" />
+		<link rel="stylesheet" href="assets/css/styles.css" />
+		<!-- manifest -->
+		<link rel="manifest" href="/manifest.json">
 		<!-- Favicons -->
-		<link rel="shortcut icon" href="/assets/favicon.ico">
-		<link rel="icon" sizes="16x16 32x32 64x64" href="/assets/favicon.ico">
+		<link rel="shortcut icon" href="/assets/icons/favicon.ico">
+		<link rel="icon" sizes="16x16 32x32 64x64" href="/assets/icons/favicon.ico">
 		<title>Restaurant Reviews</title>
 	</head>
 
@@ -47,6 +52,7 @@
 		</main>
 
 		<script charset="utf-8" src="app/dbhelper.js"></script>
+		<script charset="utf-8" src="app/idb.js"></script>
 		<script charset="utf-8" src="app/main.js"></script>
 		<script charset="utf-8" src="app/restaurants_index.js"></script>
 		<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.30&key=AIzaSyBnpXTRc4VnjfrA6lesKaIJuYLsa_UcJpo&libraries=places&callback=initMap"></script>

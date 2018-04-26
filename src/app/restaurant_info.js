@@ -4,7 +4,7 @@ var map;
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
-document.addEventListener(`DOMContentLoaded`, (event) => {
+document.addEventListener(`DOMContentLoaded`, ( /*event*/ ) => {
 	fetchRestaurantFromURL();
 });
 /**
@@ -17,7 +17,6 @@ window.initMap = () => {
 			center: restaurant.latlng,
 			scrollwheel: false
 		});
-		/*fillBreadcrumb();*/
 		DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
 	}).catch((error) => console.error(error));
 };
@@ -48,20 +47,22 @@ function fetchRestaurantFromURL() {
  */
 function fillRestaurantHTML(restaurant = self.restaurant) {
 	const name = document.getElementById(`restaurant-name`);
+	if (name.innerHTML != ``) return;
 	name.innerHTML = restaurant.name;
 
 	const address = document.getElementById(`restaurant-address`);
 	address.innerHTML = restaurant.address;
 
 	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, ``);
-	const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();
+	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
+	const imageFileExtension = `jpg`;
 	const imageContainer = document.getElementById(`img-container`);
 	imageContainer.innerHTML = `<picture>
-			<source media="(max-width: 600px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
 					sizes="100vw"></source>
-			<source media="(min-width: 600px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
 					sizes="50vw"></source>
-			<img src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
+			<img class="lazy" src="placeholder-image.jpg" data-src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
 		</picture>`;
 
 	const cuisine = document.getElementById(`restaurant-cuisine`);
@@ -101,6 +102,7 @@ function fillReviewsHTML(reviews = self.restaurant.reviews) {
 	reviews.forEach(review => {
 		container.appendChild(createReviewHTML(review));
 	});
+	enableLazyLoading();
 }
 
 /**
@@ -112,7 +114,7 @@ function createReviewHTML(review) {
 		<author>${review.name}</author>
 		<time datetime="${review.date}">${review.date}</time>
 		<meter class="meter-5-hearth" max="5" value="${review.rating}"></meter>
-		<span aria-role="presentation" aria-label="Rating ${review.rating} out of 5" data-value="${review.rating}"></span>
+		<span role="presentation" aria-label="Rating ${review.rating} out of 5" data-value="${review.rating}"></span>
 		<p>${review.comments}</p>`;
 	return article;
 }
@@ -141,4 +143,26 @@ function getParameterByName(name, url) {
 	if (!results[2])
 		return ``;
 	return decodeURIComponent(results[2].replace(/\+/g, ` `));
+}
+/**
+ * Add markers for current restaurants to the map.
+ */
+function enableLazyLoading() {
+	var lazyImages = [].slice.call(document.querySelectorAll(`.lazy`));
+	if (`IntersectionObserver` in window) {
+		let lazyImageObserver = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					let lazyImage = entry.target;
+					lazyImage.src = lazyImage.dataset.src;
+					lazyImage.srcset = lazyImage.dataset.srcset;
+					lazyImage.classList.remove(`lazy`);
+					lazyImageObserver.unobserve(lazyImage);
+				}
+			});
+		});
+		lazyImages.forEach(lazyImage => lazyImageObserver.observe(lazyImage));
+	} else {
+		// Possibly fall back to a more compatible method here
+	}
 }

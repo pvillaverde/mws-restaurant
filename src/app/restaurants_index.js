@@ -120,6 +120,7 @@ function fillRestaurantsHTML(restaurants = self.restaurants) {
 		ul.append(createRestaurantHTML(restaurant));
 	});
 	addMarkersToMap();
+	enableLazyLoading();
 }
 
 /**
@@ -128,19 +129,20 @@ function fillRestaurantsHTML(restaurants = self.restaurants) {
 function createRestaurantHTML(restaurant) {
 	restaurant.rating = getRestaurantRating(restaurant);
 	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, ``);
-	const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();
+	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
+	const imageFileExtension = `jpg`;
 	const li = document.createElement(`li`);
 	li.innerHTML = `
 		<a href="${DBHelper.urlForRestaurant(restaurant)}" aria-label="${restaurant.name}">
 			<figure>
 				<picture>
-					<source media="(max-width: 600px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+					<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
 							sizes="100vw"></source>
-					<source media="(max-width: 960px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+					<source class="lazy"  media="(max-width: 960px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
 							sizes="50vw"></source>
-					<source media="(min-width: 960px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+					<source class="lazy"  media="(min-width: 960px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
 							sizes="360px"></source>
-					<img src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
+					<img class="lazy" src="placeholder-image.jpg" data-src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
 				</picture>
 				<figcaption>
 					<h1>${restaurant.name} <span class="pull-right icon ion-android-favorite" aria-label="Average rating">${restaurant.rating}</span></h1>
@@ -166,7 +168,7 @@ function getRestaurantRating(restaurant) {
  * Add markers for current restaurants to the map.
  */
 function addMarkersToMap(restaurants = self.restaurants) {
-	if (!self.map) return;
+	if (!self.map || !restaurants) return;
 	restaurants.forEach(restaurant => {
 		// Add marker to the map
 		const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
@@ -175,4 +177,26 @@ function addMarkersToMap(restaurants = self.restaurants) {
 		});
 		self.markers.push(marker);
 	});
+}
+/**
+ * Add markers for current restaurants to the map.
+ */
+function enableLazyLoading() {
+	var lazyImages = [].slice.call(document.querySelectorAll(`.lazy`));
+	if (`IntersectionObserver` in window) {
+		let lazyImageObserver = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					let lazyImage = entry.target;
+					lazyImage.src = lazyImage.dataset.src;
+					lazyImage.srcset = lazyImage.dataset.srcset;
+					lazyImage.classList.remove(`lazy`);
+					lazyImageObserver.unobserve(lazyImage);
+				}
+			});
+		});
+		lazyImages.forEach(lazyImage => lazyImageObserver.observe(lazyImage));
+	} else {
+		// Possibly fall back to a more compatible method here
+	}
 }

@@ -2,69 +2,124 @@
  * Common database helper functions.
  */
 class DBHelper {
-
 	/**
 	 * Database URL.
 	 * Change this to restaurants.json file location on your server.
 	 */
 	static get DATABASE_URL() {
-		const port = 8000; // Change this to your server port
-		/*return `http://localhost:${port}/data/restaurants.json`;*/
-		return `/data/restaurants.json`;
+		const port = 1337; // Change this to your server port
+		return `http://localhost:${port}/restaurants`;
+		/*return `/data/restaurants.json`;*/
+	}
+
+	/* Open IndexDB Database*/
+	static openDatabase() {
+		// If the browser doesn't support service worker,
+		// we don't care about having a database
+		if (!navigator.serviceWorker) {
+			return Promise.resolve();
+		}
+
+		return idb.open(`review-restaurants`, 1, (upgradeDB) => {
+			switch (upgradeDB.oldVersion) {
+				case 0:
+					{
+						const restaurantsStore = upgradeDB.createObjectStore(`restaurants`, {
+							keyPath: `id`
+						});
+						restaurantsStore.createIndex(`by-cuisine`, `cuisine_type`);
+						restaurantsStore.createIndex(`by-neighborhood`, `neighborhood`);
+					}
+			}
+		});
+
 	}
 
 	/**
 	 * Fetch all restaurants.
 	 */
 	static fetchRestaurants() {
-		/*const promise = new Promise((resolve, reject) => {
-			let xhr = new XMLHttpRequest();
-			xhr.open('GET', DBHelper.DATABASE_URL);
-			xhr.onload = () => {
-				if (xhr.status === 200) { // Got a success response from server!
-					const json = JSON.parse(xhr.responseText);
-					const restaurants = json.restaurants;
-					resolve(restaurants);
-				} else { // Oops!. Got an error from server.
-					const error = (`Request failed. Returned status of ${xhr.status}`);
-					reject(error);
-				}
-			};
-			xhr.send();
+		return DBHelper.getRestaurantsFromLocal().then(restaurants => {
+			if (restaurants && restaurants.length) {
+				DBHelper.getRestaurantsFromRemote();
+				return restaurants;
+			} else {
+				return DBHelper.getRestaurantsFromRemote();
+			}
 		});
-		return promise;*/
+	}
 
-		/* NOT WORKING ON python SimpleHTTPServer. It does work with npm http-server */
+	static getRestaurantsFromLocal() {
+		return DBHelper.openDatabase().then((db) => {
+			if (!db) return;
+			return db.transaction(`restaurants`).objectStore(`restaurants`).getAll();
+		});
+	}
+
+	static getRestaurantsFromRemote() {
 		return fetch(DBHelper.DATABASE_URL)
-			.then((response) => response.json())
-			.then((json) => json.restaurants);
+			.then(response => response.json())
+			.then(restaurants => {
+				DBHelper.addRestaurantsToIndexDB(restaurants);
+				return restaurants;
+			});
+	}
+
+	static addRestaurantsToIndexDB(restaurants) {
+		return DBHelper.openDatabase().then((db) => {
+			if (!db) return;
+
+			const tx = db.transaction(`restaurants`, `readwrite`);
+			const store = tx.objectStore(`restaurants`);
+			restaurants.forEach(restaurant => store.put(restaurant));
+			return tx.complete;
+		});
 	}
 
 	/**
 	 * Fetch a restaurant by its ID.
 	 */
 	static fetchRestaurantById(id) {
-		// fetch all restaurants with proper error handling.
-		return DBHelper.fetchRestaurants().then((restaurants) => {
-			const restaurant = restaurants.find(r => r.id == id);
-			if (restaurant) { // Got the restaurant
-				return restaurant;
-			} else { // Restaurant does not exist in the database
-				throw `Restaurant does not exist`;
-			}
+		return DBHelper.openDatabase().then((db) => {
+			if (!db) return;
+			//parseInt because id are stored as integers on database
+			return db.transaction(`restaurants`).objectStore(`restaurants`).get(parseInt(id));
+		}).then(restaurant => {
+			return restaurant || fetch(`${DBHelper.DATABASE_URL}/${id}`)
+				.then(response => response.json());
 		});
 	}
+	/*static deleteRestaurantsFromIndexDB() {
+		return DBHelper.openDatabase().then((db) => {
+			if (!db) return;
 
+			const tx = db.transaction(`restaurants`, `readwrite`);
+			const store = tx.objectStore(`restaurants`);
+			store.openCursor(null, `prev`)
+				.then(function(cursor) {
+					return cursor.advance(30);
+				})
+				.then(function deleteRest(cursor) {
+					if (!cursor) return;
+					cursor.delete();
+					return cursor.continue().then(deleteRest);
+				});
+			return tx.complete;
+		});
+	}*/
 	/**
 	 * Fetch restaurants by a cuisine type with proper error handling.
 	 */
 	static fetchRestaurantByCuisine(cuisine) {
 		// Fetch all restaurants  with proper error handling
-		return DBHelper.fetchRestaurants().then((restaurants) => {
+		return DBHelper.fetchRestaurants()
 			// Filter restaurants to have only given cuisine type
-			const results = restaurants.filter(r => r.cuisine_type == cuisine);
-			return results;
-		});
+			.then(restaurants => restaurants.filter(r => r.cuisine_type == cuisine))
+			.catch(() => DBHelper.openDatabase().then((db) => {
+				if (!db) return;
+
+				return db.transaction(`restaurants`).objectStore(`restaurants`).index(`by-cuisine`).getAll(cuisine);
+			}));
 	}
 
 	/**
@@ -72,11 +127,14 @@ class DBHelper {
 	 */
 	static fetchRestaurantByNeighborhood(neighborhood) {
 		// Fetch all restaurants
-		return DBHelper.fetchRestaurants().then((restaurants) => {
+		return DBHelper.fetchRestaurants()
 			// Filter restaurants to have only given neighborhood
-			const results = restaurants.filter(r => r.neighborhood == neighborhood);
-			return results;
-		});
+			.then(restaurants => restaurants.filter(r => r.neighborhood == neighborhood))
+			.catch(() => DBHelper.openDatabase().then((db) => {
+				if (!db) return;
+
+				return db.transaction(`restaurants`).objectStore(`restaurants`).index(`by-neighborhood`);
+			}));
 	}
 
 	/**

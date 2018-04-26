@@ -1,2 +1,202 @@
-"use strict";var map,restaurants=void 0,neighborhoods=void 0,cuisines=void 0,markers=[];function fetchNeighborhoods(){DBHelper.fetchNeighborhoods().then(function(t){self.neighborhoods=t,fillNeighborhoodsHTML()}).catch(function(t){return console.error(t)})}function fillNeighborhoodsHTML(){var t=0<arguments.length&&void 0!==arguments[0]?arguments[0]:self.neighborhoods,n=document.getElementById("neighborhoods-select");t.forEach(function(t){var e=document.createElement("option");e.innerHTML=t,e.value=t,n.append(e)})}function fetchCuisines(){DBHelper.fetchCuisines().then(function(t){self.cuisines=t,fillCuisinesHTML()}).catch(function(t){return console.error(t)})}function fillCuisinesHTML(){var t=0<arguments.length&&void 0!==arguments[0]?arguments[0]:self.cuisines,n=document.getElementById("cuisines-select");t.forEach(function(t){var e=document.createElement("option");e.innerHTML=t,e.value=t,n.append(e)})}function updateRestaurants(){var t=document.getElementById("cuisines-select"),e=document.getElementById("neighborhoods-select"),n=t.selectedIndex,r=e.selectedIndex,a=t[n].value,s=e[r].value;DBHelper.fetchRestaurantByCuisineAndNeighborhood(a,s).then(function(t){resetRestaurants(t),fillRestaurantsHTML()}).catch(function(t){return console.error(t)})}function resetRestaurants(t){self.restaurants=[],document.getElementById("restaurants-list").innerHTML="",self.markers.forEach(function(t){return t.setMap(null)}),self.markers=[],self.restaurants=t}function fillRestaurantsHTML(){var t=0<arguments.length&&void 0!==arguments[0]?arguments[0]:self.restaurants,e=document.getElementById("restaurants-list");t.forEach(function(t){e.append(createRestaurantHTML(t))}),addMarkersToMap()}function createRestaurantHTML(t){t.rating=getRestaurantRating(t);var e=DBHelper.imageUrlForRestaurant(t).replace(/\.[^/.]+$/,""),n=DBHelper.imageUrlForRestaurant(t).split(".").pop(),r=document.createElement("li");return r.innerHTML='\n\t\t<a href="'+DBHelper.urlForRestaurant(t)+'" aria-label="'+t.name+'">\n\t\t\t<figure>\n\t\t\t\t<picture>\n\t\t\t\t\t<source media="(max-width: 600px)" srcset="'+e+"-400."+n+" 400w, "+e+"-800."+n+' 800w"\n\t\t\t\t\t\t\tsizes="100vw"></source>\n\t\t\t\t\t<source media="(max-width: 960px)" srcset="'+e+"-400."+n+" 400w, "+e+"-800."+n+' 800w"\n\t\t\t\t\t\t\tsizes="50vw"></source>\n\t\t\t\t\t<source media="(min-width: 960px)" srcset="'+e+"-400."+n+" 400w, "+e+"-800."+n+' 800w"\n\t\t\t\t\t\t\tsizes="360px"></source>\n\t\t\t\t\t<img src="'+e+"-800."+n+'" alt="'+t.name+"'s restaurant photo\">\n\t\t\t\t</picture>\n\t\t\t\t<figcaption>\n\t\t\t\t\t<h1>"+t.name+' <span class="pull-right icon ion-android-favorite" aria-label="Average rating">'+t.rating+'</span></h1>\n\t\t\t\t\t<p>\n\t\t\t\t\t\t<span class="icon ion-android-restaurant" aria-label="Cuisine Type">'+t.cuisine_type+'</span>\n\t\t\t\t\t\t<span class="icon ion-location pull-right" aria-label="Neighborhood">'+t.neighborhood+"</span>\n\t\t\t\t\t</p>\n\t\t\t\t</figcaption>\n\t\t\t</figure>\n\t\t</a>",r}function getRestaurantRating(t){var e=10*t.reviews.reduce(function(t,e){return t+e.rating},0);return Math.round(e/t.reviews.length,1)/10}function addMarkersToMap(){var t=0<arguments.length&&void 0!==arguments[0]?arguments[0]:self.restaurants;self.map&&t.forEach(function(t){var e=DBHelper.mapMarkerForRestaurant(t,self.map);google.maps.event.addListener(e,"click",function(){window.location.href=e.url}),self.markers.push(e)})}document.addEventListener("DOMContentLoaded",function(t){fetchNeighborhoods(),fetchCuisines(),updateRestaurants()}),window.initMap=function(){self.map=new google.maps.Map(document.getElementById("map"),{zoom:12,center:{lat:40.722216,lng:-73.987501}}),addMarkersToMap()};
-//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlc3RhdXJhbnRzX2luZGV4LmpzIl0sIm5hbWVzIjpbIm5laWdoYm9yaG9vZHMiLCJyZXN0YXVyYW50cyIsImN1aXNpbmVzIiwiZmV0Y2hOZWlnaGJvcmhvb2RzIiwiREJIZWxwZXIiLCJ0aGVuIiwic2VsZiIsImZpbGxOZWlnaGJvcmhvb2RzSFRNTCIsImFyZ3VtZW50cyIsImxlbmd0aCIsInVuZGVmaW5lZCIsInNlbGVjdCIsImRvY3VtZW50IiwiZ2V0RWxlbWVudEJ5SWQiLCJmb3JFYWNoIiwibmVpZ2hib3Job29kIiwib3B0aW9uIiwidmFsdWUiLCJmZXRjaEN1aXNpbmVzIiwiZmlsbEN1aXNpbmVzSFRNTCIsImNhdGNoIiwiZXJyb3IiLCJjb25zb2xlIiwiY3Vpc2luZSIsImNyZWF0ZUVsZW1lbnQiLCJpbm5lckhUTUwiLCJ6b29tIiwidXBkYXRlUmVzdGF1cmFudHMiLCJjZW50ZXIiLCJsb2MiLCJuU2VsZWN0IiwiY0luZGV4IiwiY1NlbGVjdCIsInNlbGVjdGVkSW5kZXgiLCJuSW5kZXgiLCJyZXNldFJlc3RhdXJhbnRzIiwiZmlsbFJlc3RhdXJhbnRzSFRNTCIsIm1hcmtlcnMiLCJtIiwic2V0TWFwIiwidWwiLCJyZXN0YXVyYW50IiwiYXBwZW5kIiwiY3JlYXRlUmVzdGF1cmFudEhUTUwiLCJpbWFnZVVybEZvclJlc3RhdXJhbnQiLCJyZXBsYWNlIiwiaW1hZ2VGaWxlRXh0ZW5zaW9uIiwic3BsaXQiLCJwb3AiLCJuYW1lIiwiaW1hZ2VGaWxlTmFtZSIsInJhdGluZyIsImdldFJlc3RhdXJhbnRSYXRpbmciLCJjdWlzaW5lX3R5cGUiLCJzdW0iLCJyZXZpZXdzIiwicmVkdWNlIiwidG90YWwiLCJyZXZpZXciLCJNYXRoIiwicm91bmQiLCJtYXAiLCJtYXJrZXIiLCJ3aW5kb3ciLCJsb2NhdGlvbiIsImdvb2dsZSIsIm1hcHMiLCJldmVudCIsImFkZExpc3RlbmVyIiwiaHJlZiIsInVybCIsInB1c2giLCJhZGRFdmVudExpc3RlbmVyIiwiTWFwIiwibG5nIl0sIm1hcHBpbmdzIjoiYUFBQSxJQUNDQSxJQURHQyxpQkFBQUEsRUFDSEQsbUJBQUFBLEVBRERFLGNBQUFBLEVBRUNBLFFBQUFBLEdBaUJELFNBQVNDLHFCQUFUQyxTQUFTRCxxQkFBcUJFLEtBQUEsU0FBQUwsR0FDN0JJLEtBQUFBLGNBQVNELEVBQ1JHLDBCQUNBQyxNQUFBQSxTQUFBQSxHQUFBQSxPQUFBQSxRQUFBQSxNQUFBQSxLQUlGLFNBQUFBLHdCQUFBLElBQUFQLEVBQUEsRUFBQVEsVUFBQUMsYUFBQUMsSUFBQUYsVUFBQSxHQUFBQSxVQUFBLEdBQUFGLEtBQUFOLGNBSU9XLEVBQVNDLFNBQVNDLGVBQVQsd0JBQ2ZiLEVBQWNjLFFBQVEsU0FBQUMsR0FGdkIsSUFBQUMsRUFBU1QsU0FBQUEsY0FBQUEsVUFBMERTLEVBQXBDaEIsVUFBb0NlLEVBS2pFQyxFQUFPQyxNQUFRRixFQUpoQkosRUFBTUEsT0FBU0MsS0FPZixTQUFBTSxnQkFNQWQsU0FBU2MsZ0JBQWdCYixLQUFLLFNBQUNILEdBSmhDSSxLQUFBSixTQUFBQSxFQU1FaUIscUJBQ0VDLE1BQU0sU0FBQ0MsR0FBRCxPQUFXQyxRQUFRRCxNQUFNQSxLQUF6QixTQUFXQyxtQkFBWCxJQUF5QkQsRUFBekIsRUFBQWIsVUFBQUMsYUFBQUMsSUFBQUYsVUFBQSxHQUFBQSxVQUFBLEdBQUFGLEtBQUFKLFNBSFRTLEVBQUFDLFNBQUFDLGVBQUEsbUJBWUFYLEVBQVNZLFFBQVEsU0FBQVMsR0FObEIsSUFBQVAsRUFBQUosU0FBQVksY0FBQSxVQVFFUixFQUFPUyxVQUFZRixFQUNuQlAsRUFBT0MsTUFBUU0sRUFOakJaLEVBQVNRLE9BQUFBLEtBb0JQTyxTQUFNQyxvQkFDTkMsSUFBQUEsRUFBUUMsU0FBQUEsZUFBQUEsbUJBRlRDLEVBQUFsQixTQUFBQyxlQUFBLHdCQUxEa0IsRUFBQUMsRUFBQUMsY0FvQk9DLEVBQVNKLEVBQVFHLGNBRWpCVixFQUFVUyxFQUFRRCxHQUFRZCxNQUMxQkYsRUFBZWUsRUFBUUksR0FBUWpCLE1BUHJDYixTQUFNNEIsd0NBQVVULEVBQWhCUixHQUFBVixLQUFBLFNBQUFKLEdBQ0FrQyxpQkFBZ0J2QixHQVVmd0Isd0JBUkRoQixNQUFNVyxTQUFBQSxHQUFBQSxPQUFTQyxRQUFRQyxNQUF2QlosS0FPQ2MsU0FBQUEsaUJBQWlCbEMsR0FFakJLLEtBQUVjLFlBQU9DLEdBQVVDLFNBQVFELGVBQVJDLG9CQUhwQkcsVUFHUyxHQUlWbkIsS0FBQStCLFFBQUF2QixRQUFBLFNBQUF3QixHQUFBLE9BQUFBLEVBQUFDLE9BQUEsUUFXQ2pDLEtBQUsrQixRQUFVLEdBQ2YvQixLQUFLTCxZQUFjQSxFQU1wQixTQUFTbUMsc0JBQW9ELElBQWhDbkMsRUFBZ0MsRUFBQU8sVUFBQUMsYUFBQUMsSUFBQUYsVUFBQSxHQUFBQSxVQUFBLEdBQWxCRixLQUFLTCxZQVQvQ3VDLEVBQUE1QixTQUFBQyxlQUFBLG9CQUNBUCxFQUFBUSxRQUFBLFNBQUEyQixHQUFxQkQsRUFBQUUsT0FBT0gscUJBQVBFLE1BQ3JCbkMsa0JBa0JELFNBQVNxQyxxQkFBcUJGLEdBWDlCQSxFQUFTTCxPQUFBQSxvQkFBb0RLLEdBQUEsSUFBaEN4QyxFQUFnQ0csU0FBQXdDLHNCQUFBSCxHQUFBSSxRQUFBLFlBQUEsSUFjdERDLEVBQXFCMUMsU0FBU3dDLHNCQUFzQkgsR0FBWU0sTUFBM0MsS0FBc0RDLE1BYjNFUixFQUFLNUIsU0FBU0MsY0FBVEQsTUEyQ1gsT0ExQ0FYLEVBQUFBLFVBQUFBLGtCQUNXMEMsU0FBQUEsaUJBQXFCRixHQURoQ3hDLGlCQUNDd0MsRUFBQVEsS0FERGhELCtGQUlBaUQsRUFKQWpELFFBSUE2QyxFQUpBN0MsVUFJQWlELEVBSkFqRCxRQUlBNkMsRUFKQTdDLHVHQU1EaUQsRUFOQ2pELFFBTUQ2QyxFQU5DN0MsVUFNRGlELEVBTkNqRCxRQU1ENkMsRUFOQzdDLHNHQXNCaURpRCxFQXRCakRqRCxRQXNCc0U2QyxFQXRCdEU3QyxVQXNCa0dpRCxFQXRCbEdqRCxRQXNCdUg2QyxFQXRCdkg3QyxzRUFVV2tELEVBVlhsRCxRQVVvQm1ELEVBVnBCbkQsVUFVQXdDLEVBQUFRLEtBVkFoRCxtRkFhV1csRUFBU1ksS0FicEJ2QixtRkFhQXdDLEVBQUFVLE9BYkFsRCxnSEE2QjJFd0MsRUFBV1ksYUE3QnRGcEQsNkZBb0NBd0MsRUFBQTFCLGFBcENBZCw0RUEwQ0lxRCxFQURMLFNBQVNGLG9CQUFvQlgsR0FLN0IsSUFBQWEsRUFBQSxHQUFBYixFQUFBYyxRQUFBQyxPQUFBLFNBQUFDLEVBQUFDLEdBQUEsT0FBQUQsRUFBQUMsRUFBQVAsUUFBQSxHQUhDLE9BQU9RLEtBQUtDLE1BQU1OLEVBQU1iLEVBQVdjLFFBQVE5QyxPQUFRLEdBQUssR0FReERSLFNBQUFBLGtCQUFrQyxJQUFkQSxFQUFjLEVBQUFPLFVBQUFDLGFBQUFDLElBQUFGLFVBQUEsR0FBQUEsVUFBQSxHQUFkRixLQUFjTCxZQUNqQ0ssS0FBQXVELEtBQ0E1RCxFQUFNNkQsUUFBUzFELFNBQUFBLEdBRWQyRCxJQUFBQSxFQUFPQyxTQUFnQkYsdUJBQXZCckIsRUFBQW5DLEtBQUF1RCxLQUNBSSxPQUZEQyxLQUFBQyxNQUFBQyxZQUFBTixFQUVDLFFBRkQsV0FHQXhELE9BQUsrQixTQUFMZ0MsS0FBQVAsRUFBQVEsTUFFRGhFLEtBQUErQixRQUFBa0MsS0FBQVQsS0F4S0RsRCxTQUFTNEQsaUJBQVQsbUJBQThDLFNBQUNMLEdBQzlDaEUscUJBRERTLGdCQUNDVCxzQkErQ0NhLE9BQUFBLFFBQU9TLFdBY1JuQixLQUFLdUQsSUFBTSxJQUFJSSxPQUFPQyxLQUFLTyxJQUFJN0QsU0FBU0MsZUFBVCxPQUFnQyxDQVJoRWEsS0FBQSxHQVVFRSxPQWZPWCxDQUNQTixJQUFBQSxVQUpEK0QsS0FBQSxhQVdEWCIsImZpbGUiOiJyZXN0YXVyYW50c19pbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbImxldCByZXN0YXVyYW50cyxcclxuXHRuZWlnaGJvcmhvb2RzLFxyXG5cdGN1aXNpbmVzO1xyXG52YXIgbWFwO1xyXG52YXIgbWFya2VycyA9IFtdO1xyXG5cclxuLyoqXHJcbiAqIEZldGNoIG5laWdoYm9yaG9vZHMgYW5kIGN1aXNpbmVzIGFzIHNvb24gYXMgdGhlIHBhZ2UgaXMgbG9hZGVkLlxyXG4gKi9cclxuZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcihgRE9NQ29udGVudExvYWRlZGAsIChldmVudCkgPT4ge1xyXG5cdGZldGNoTmVpZ2hib3Job29kcygpO1xyXG5cdGZldGNoQ3Vpc2luZXMoKTtcclxuXHR1cGRhdGVSZXN0YXVyYW50cygpO1xyXG5cclxufSk7XHJcblxyXG4vKipcclxuICogRmV0Y2ggYWxsIG5laWdoYm9yaG9vZHMgYW5kIHNldCB0aGVpciBIVE1MLlxyXG4gKi9cclxuZnVuY3Rpb24gZmV0Y2hOZWlnaGJvcmhvb2RzKCkge1xyXG5cdERCSGVscGVyLmZldGNoTmVpZ2hib3Job29kcygpLnRoZW4oKG5laWdoYm9yaG9vZHMpID0+IHtcclxuXHRcdHNlbGYubmVpZ2hib3Job29kcyA9IG5laWdoYm9yaG9vZHM7XHJcblx0XHRmaWxsTmVpZ2hib3Job29kc0hUTUwoKTtcclxuXHR9KS5jYXRjaCgoZXJyb3IpID0+IGNvbnNvbGUuZXJyb3IoZXJyb3IpKTtcclxufVxyXG5cclxuLyoqXHJcbiAqIFNldCBuZWlnaGJvcmhvb2RzIEhUTUwuXHJcbiAqL1xyXG5mdW5jdGlvbiBmaWxsTmVpZ2hib3Job29kc0hUTUwobmVpZ2hib3Job29kcyA9IHNlbGYubmVpZ2hib3Job29kcykge1xyXG5cdGNvbnN0IHNlbGVjdCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBuZWlnaGJvcmhvb2RzLXNlbGVjdGApO1xyXG5cdG5laWdoYm9yaG9vZHMuZm9yRWFjaChuZWlnaGJvcmhvb2QgPT4ge1xyXG5cdFx0Y29uc3Qgb3B0aW9uID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChgb3B0aW9uYCk7XHJcblx0XHRvcHRpb24uaW5uZXJIVE1MID0gbmVpZ2hib3Job29kO1xyXG5cdFx0b3B0aW9uLnZhbHVlID0gbmVpZ2hib3Job29kO1xyXG5cdFx0c2VsZWN0LmFwcGVuZChvcHRpb24pO1xyXG5cdH0pO1xyXG59XHJcblxyXG4vKipcclxuICogRmV0Y2ggYWxsIGN1aXNpbmVzIGFuZCBzZXQgdGhlaXIgSFRNTC5cclxuICovXHJcbmZ1bmN0aW9uIGZldGNoQ3Vpc2luZXMoKSB7XHJcblx0REJIZWxwZXIuZmV0Y2hDdWlzaW5lcygpLnRoZW4oKGN1aXNpbmVzKSA9PiB7XHJcblx0XHRzZWxmLmN1aXNpbmVzID0gY3Vpc2luZXM7XHJcblx0XHRmaWxsQ3Vpc2luZXNIVE1MKCk7XHJcblx0fSkuY2F0Y2goKGVycm9yKSA9PiBjb25zb2xlLmVycm9yKGVycm9yKSk7XHJcbn1cclxuXHJcbi8qKlxyXG4gKiBTZXQgY3Vpc2luZXMgSFRNTC5cclxuICovXHJcbmZ1bmN0aW9uIGZpbGxDdWlzaW5lc0hUTUwoY3Vpc2luZXMgPSBzZWxmLmN1aXNpbmVzKSB7XHJcblx0Y29uc3Qgc2VsZWN0ID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYGN1aXNpbmVzLXNlbGVjdGApO1xyXG5cclxuXHRjdWlzaW5lcy5mb3JFYWNoKGN1aXNpbmUgPT4ge1xyXG5cdFx0Y29uc3Qgb3B0aW9uID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChgb3B0aW9uYCk7XHJcblx0XHRvcHRpb24uaW5uZXJIVE1MID0gY3Vpc2luZTtcclxuXHRcdG9wdGlvbi52YWx1ZSA9IGN1aXNpbmU7XHJcblx0XHRzZWxlY3QuYXBwZW5kKG9wdGlvbik7XHJcblx0fSk7XHJcbn1cclxuXHJcbi8qKlxyXG4gKiBJbml0aWFsaXplIEdvb2dsZSBtYXAsIGNhbGxlZCBmcm9tIEhUTUwuXHJcbiAqL1xyXG53aW5kb3cuaW5pdE1hcCA9ICgpID0+IHtcclxuXHRsZXQgbG9jID0ge1xyXG5cdFx0bGF0OiA0MC43MjIyMTYsXHJcblx0XHRsbmc6IC03My45ODc1MDFcclxuXHR9O1xyXG5cdHNlbGYubWFwID0gbmV3IGdvb2dsZS5tYXBzLk1hcChkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgbWFwYCksIHtcclxuXHRcdHpvb206IDEyLFxyXG5cdFx0Y2VudGVyOiBsb2MsXHJcblx0fSk7XHJcblx0YWRkTWFya2Vyc1RvTWFwKCk7XHJcbn07XHJcblxyXG4vKipcclxuICogVXBkYXRlIHBhZ2UgYW5kIG1hcCBmb3IgY3VycmVudCByZXN0YXVyYW50cy5cclxuICovXHJcbmZ1bmN0aW9uIHVwZGF0ZVJlc3RhdXJhbnRzKCkge1xyXG5cdGNvbnN0IGNTZWxlY3QgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChgY3Vpc2luZXMtc2VsZWN0YCk7XHJcblx0Y29uc3QgblNlbGVjdCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGBuZWlnaGJvcmhvb2RzLXNlbGVjdGApO1xyXG5cclxuXHRjb25zdCBjSW5kZXggPSBjU2VsZWN0LnNlbGVjdGVkSW5kZXg7XHJcblx0Y29uc3QgbkluZGV4ID0gblNlbGVjdC5zZWxlY3RlZEluZGV4O1xyXG5cclxuXHRjb25zdCBjdWlzaW5lID0gY1NlbGVjdFtjSW5kZXhdLnZhbHVlO1xyXG5cdGNvbnN0IG5laWdoYm9yaG9vZCA9IG5TZWxlY3RbbkluZGV4XS52YWx1ZTtcclxuXHJcblx0REJIZWxwZXIuZmV0Y2hSZXN0YXVyYW50QnlDdWlzaW5lQW5kTmVpZ2hib3Job29kKGN1aXNpbmUsIG5laWdoYm9yaG9vZCkudGhlbigocmVzdGF1cmFudHMpID0+IHtcclxuXHRcdHJlc2V0UmVzdGF1cmFudHMocmVzdGF1cmFudHMpO1xyXG5cdFx0ZmlsbFJlc3RhdXJhbnRzSFRNTCgpO1xyXG5cdH0pLmNhdGNoKChlcnJvcikgPT4gY29uc29sZS5lcnJvcihlcnJvcikpO1xyXG5cclxufVxyXG5cclxuLyoqXHJcbiAqIENsZWFyIGN1cnJlbnQgcmVzdGF1cmFudHMsIHRoZWlyIEhUTUwgYW5kIHJlbW92ZSB0aGVpciBtYXAgbWFya2Vycy5cclxuICovXHJcbmZ1bmN0aW9uIHJlc2V0UmVzdGF1cmFudHMocmVzdGF1cmFudHMpIHtcclxuXHQvLyBSZW1vdmUgYWxsIHJlc3RhdXJhbnRzXHJcblx0c2VsZi5yZXN0YXVyYW50cyA9IFtdO1xyXG5cdGNvbnN0IHVsID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYHJlc3RhdXJhbnRzLWxpc3RgKTtcclxuXHR1bC5pbm5lckhUTUwgPSBgYDtcclxuXHJcblx0Ly8gUmVtb3ZlIGFsbCBtYXAgbWFya2Vyc1xyXG5cdHNlbGYubWFya2Vycy5mb3JFYWNoKG0gPT4gbS5zZXRNYXAobnVsbCkpO1xyXG5cdHNlbGYubWFya2VycyA9IFtdO1xyXG5cdHNlbGYucmVzdGF1cmFudHMgPSByZXN0YXVyYW50cztcclxufVxyXG5cclxuLyoqXHJcbiAqIENyZWF0ZSBhbGwgcmVzdGF1cmFudHMgSFRNTCBhbmQgYWRkIHRoZW0gdG8gdGhlIHdlYnBhZ2UuXHJcbiAqL1xyXG5mdW5jdGlvbiBmaWxsUmVzdGF1cmFudHNIVE1MKHJlc3RhdXJhbnRzID0gc2VsZi5yZXN0YXVyYW50cykge1xyXG5cdGNvbnN0IHVsID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoYHJlc3RhdXJhbnRzLWxpc3RgKTtcclxuXHRyZXN0YXVyYW50cy5mb3JFYWNoKHJlc3RhdXJhbnQgPT4ge1xyXG5cdFx0dWwuYXBwZW5kKGNyZWF0ZVJlc3RhdXJhbnRIVE1MKHJlc3RhdXJhbnQpKTtcclxuXHR9KTtcclxuXHRhZGRNYXJrZXJzVG9NYXAoKTtcclxufVxyXG5cclxuLyoqXHJcbiAqIENyZWF0ZSByZXN0YXVyYW50IEhUTUwuXHJcbiAqL1xyXG5mdW5jdGlvbiBjcmVhdGVSZXN0YXVyYW50SFRNTChyZXN0YXVyYW50KSB7XHJcblx0cmVzdGF1cmFudC5yYXRpbmcgPSBnZXRSZXN0YXVyYW50UmF0aW5nKHJlc3RhdXJhbnQpO1xyXG5cdGNvbnN0IGltYWdlRmlsZU5hbWUgPSBEQkhlbHBlci5pbWFnZVVybEZvclJlc3RhdXJhbnQocmVzdGF1cmFudCkucmVwbGFjZSgvXFwuW14vLl0rJC8sIGBgKTtcclxuXHRjb25zdCBpbWFnZUZpbGVFeHRlbnNpb24gPSBEQkhlbHBlci5pbWFnZVVybEZvclJlc3RhdXJhbnQocmVzdGF1cmFudCkuc3BsaXQoYC5gKS5wb3AoKTtcclxuXHRjb25zdCBsaSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoYGxpYCk7XHJcblx0bGkuaW5uZXJIVE1MID0gYFxyXG5cdFx0PGEgaHJlZj1cIiR7REJIZWxwZXIudXJsRm9yUmVzdGF1cmFudChyZXN0YXVyYW50KX1cIiBhcmlhLWxhYmVsPVwiJHtyZXN0YXVyYW50Lm5hbWV9XCI+XHJcblx0XHRcdDxmaWd1cmU+XHJcblx0XHRcdFx0PHBpY3R1cmU+XHJcblx0XHRcdFx0XHQ8c291cmNlIG1lZGlhPVwiKG1heC13aWR0aDogNjAwcHgpXCIgc3Jjc2V0PVwiJHtpbWFnZUZpbGVOYW1lfS00MDAuJHtpbWFnZUZpbGVFeHRlbnNpb259IDQwMHcsICR7aW1hZ2VGaWxlTmFtZX0tODAwLiR7aW1hZ2VGaWxlRXh0ZW5zaW9ufSA4MDB3XCJcclxuXHRcdFx0XHRcdFx0XHRzaXplcz1cIjEwMHZ3XCI+PC9zb3VyY2U+XHJcblx0XHRcdFx0XHQ8c291cmNlIG1lZGlhPVwiKG1heC13aWR0aDogOTYwcHgpXCIgc3Jjc2V0PVwiJHtpbWFnZUZpbGVOYW1lfS00MDAuJHtpbWFnZUZpbGVFeHRlbnNpb259IDQwMHcsICR7aW1hZ2VGaWxlTmFtZX0tODAwLiR7aW1hZ2VGaWxlRXh0ZW5zaW9ufSA4MDB3XCJcclxuXHRcdFx0XHRcdFx0XHRzaXplcz1cIjUwdndcIj48L3NvdXJjZT5cclxuXHRcdFx0XHRcdDxzb3VyY2UgbWVkaWE9XCIobWluLXdpZHRoOiA5NjBweClcIiBzcmNzZXQ9XCIke2ltYWdlRmlsZU5hbWV9LTQwMC4ke2ltYWdlRmlsZUV4dGVuc2lvbn0gNDAwdywgJHtpbWFnZUZpbGVOYW1lfS04MDAuJHtpbWFnZUZpbGVFeHRlbnNpb259IDgwMHdcIlxyXG5cdFx0XHRcdFx0XHRcdHNpemVzPVwiMzYwcHhcIj48L3NvdXJjZT5cclxuXHRcdFx0XHRcdDxpbWcgc3JjPVwiJHtpbWFnZUZpbGVOYW1lfS04MDAuJHtpbWFnZUZpbGVFeHRlbnNpb259XCIgYWx0PVwiJHtyZXN0YXVyYW50Lm5hbWV9J3MgcmVzdGF1cmFudCBwaG90b1wiPlxyXG5cdFx0XHRcdDwvcGljdHVyZT5cclxuXHRcdFx0XHQ8ZmlnY2FwdGlvbj5cclxuXHRcdFx0XHRcdDxoMT4ke3Jlc3RhdXJhbnQubmFtZX0gPHNwYW4gY2xhc3M9XCJwdWxsLXJpZ2h0IGljb24gaW9uLWFuZHJvaWQtZmF2b3JpdGVcIiBhcmlhLWxhYmVsPVwiQXZlcmFnZSByYXRpbmdcIj4ke3Jlc3RhdXJhbnQucmF0aW5nfTwvc3Bhbj48L2gxPlxyXG5cdFx0XHRcdFx0PHA+XHJcblx0XHRcdFx0XHRcdDxzcGFuIGNsYXNzPVwiaWNvbiBpb24tYW5kcm9pZC1yZXN0YXVyYW50XCIgYXJpYS1sYWJlbD1cIkN1aXNpbmUgVHlwZVwiPiR7cmVzdGF1cmFudC5jdWlzaW5lX3R5cGV9PC9zcGFuPlxyXG5cdFx0XHRcdFx0XHQ8c3BhbiBjbGFzcz1cImljb24gaW9uLWxvY2F0aW9uIHB1bGwtcmlnaHRcIiBhcmlhLWxhYmVsPVwiTmVpZ2hib3Job29kXCI+JHtyZXN0YXVyYW50Lm5laWdoYm9yaG9vZH08L3NwYW4+XHJcblx0XHRcdFx0XHQ8L3A+XHJcblx0XHRcdFx0PC9maWdjYXB0aW9uPlxyXG5cdFx0XHQ8L2ZpZ3VyZT5cclxuXHRcdDwvYT5gO1xyXG5cclxuXHRyZXR1cm4gbGk7XHJcbn1cclxuLypcclxuICogR2V0IHJhdGluZyBhdmVyYWdlIGZvciByZXN0YXVyYW50IGZyb20gaXRzIHJldmlld3NcclxuICovXHJcbmZ1bmN0aW9uIGdldFJlc3RhdXJhbnRSYXRpbmcocmVzdGF1cmFudCkge1xyXG5cdHZhciBzdW0gPSByZXN0YXVyYW50LnJldmlld3MucmVkdWNlKCh0b3RhbCwgcmV2aWV3KSA9PiB0b3RhbCArIHJldmlldy5yYXRpbmcsIDApICogMTA7XHJcblx0cmV0dXJuIE1hdGgucm91bmQoc3VtIC8gcmVzdGF1cmFudC5yZXZpZXdzLmxlbmd0aCwgMSkgLyAxMDtcclxufVxyXG5cclxuLyoqXHJcbiAqIEFkZCBtYXJrZXJzIGZvciBjdXJyZW50IHJlc3RhdXJhbnRzIHRvIHRoZSBtYXAuXHJcbiAqL1xyXG5mdW5jdGlvbiBhZGRNYXJrZXJzVG9NYXAocmVzdGF1cmFudHMgPSBzZWxmLnJlc3RhdXJhbnRzKSB7XHJcblx0aWYgKCFzZWxmLm1hcCkgcmV0dXJuO1xyXG5cdHJlc3RhdXJhbnRzLmZvckVhY2gocmVzdGF1cmFudCA9PiB7XHJcblx0XHQvLyBBZGQgbWFya2VyIHRvIHRoZSBtYXBcclxuXHRcdGNvbnN0IG1hcmtlciA9IERCSGVscGVyLm1hcE1hcmtlckZvclJlc3RhdXJhbnQocmVzdGF1cmFudCwgc2VsZi5tYXApO1xyXG5cdFx0Z29vZ2xlLm1hcHMuZXZlbnQuYWRkTGlzdGVuZXIobWFya2VyLCBgY2xpY2tgLCAoKSA9PiB7XHJcblx0XHRcdHdpbmRvdy5sb2NhdGlvbi5ocmVmID0gbWFya2VyLnVybDtcclxuXHRcdH0pO1xyXG5cdFx0c2VsZi5tYXJrZXJzLnB1c2gobWFya2VyKTtcclxuXHR9KTtcclxufSJdfQ==
+let restaurants,
+	neighborhoods,
+	cuisines;
+var map;
+var markers = [];
+
+/**
+ * Fetch neighborhoods and cuisines as soon as the page is loaded.
+ */
+document.addEventListener(`DOMContentLoaded`, (event) => {
+	fetchNeighborhoods();
+	fetchCuisines();
+	updateRestaurants();
+
+});
+
+/**
+ * Fetch all neighborhoods and set their HTML.
+ */
+function fetchNeighborhoods() {
+	DBHelper.fetchNeighborhoods().then((neighborhoods) => {
+		self.neighborhoods = neighborhoods;
+		fillNeighborhoodsHTML();
+	}).catch((error) => console.error(error));
+}
+
+/**
+ * Set neighborhoods HTML.
+ */
+function fillNeighborhoodsHTML(neighborhoods = self.neighborhoods) {
+	const select = document.getElementById(`neighborhoods-select`);
+	neighborhoods.forEach(neighborhood => {
+		const option = document.createElement(`option`);
+		option.innerHTML = neighborhood;
+		option.value = neighborhood;
+		select.append(option);
+	});
+}
+
+/**
+ * Fetch all cuisines and set their HTML.
+ */
+function fetchCuisines() {
+	DBHelper.fetchCuisines().then((cuisines) => {
+		self.cuisines = cuisines;
+		fillCuisinesHTML();
+	}).catch((error) => console.error(error));
+}
+
+/**
+ * Set cuisines HTML.
+ */
+function fillCuisinesHTML(cuisines = self.cuisines) {
+	const select = document.getElementById(`cuisines-select`);
+
+	cuisines.forEach(cuisine => {
+		const option = document.createElement(`option`);
+		option.innerHTML = cuisine;
+		option.value = cuisine;
+		select.append(option);
+	});
+}
+
+/**
+ * Initialize Google map, called from HTML.
+ */
+window.initMap = () => {
+	let loc = {
+		lat: 40.722216,
+		lng: -73.987501
+	};
+	self.map = new google.maps.Map(document.getElementById(`map`), {
+		zoom: 12,
+		center: loc,
+	});
+	addMarkersToMap();
+};
+
+/**
+ * Update page and map for current restaurants.
+ */
+function updateRestaurants() {
+	const cSelect = document.getElementById(`cuisines-select`);
+	const nSelect = document.getElementById(`neighborhoods-select`);
+
+	const cIndex = cSelect.selectedIndex;
+	const nIndex = nSelect.selectedIndex;
+
+	const cuisine = cSelect[cIndex].value;
+	const neighborhood = nSelect[nIndex].value;
+
+	DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood).then((restaurants) => {
+		resetRestaurants(restaurants);
+		fillRestaurantsHTML();
+	}).catch((error) => console.error(error));
+
+}
+
+/**
+ * Clear current restaurants, their HTML and remove their map markers.
+ */
+function resetRestaurants(restaurants) {
+	// Remove all restaurants
+	self.restaurants = [];
+	const ul = document.getElementById(`restaurants-list`);
+	ul.innerHTML = ``;
+
+	// Remove all map markers
+	self.markers.forEach(m => m.setMap(null));
+	self.markers = [];
+	self.restaurants = restaurants;
+}
+
+/**
+ * Create all restaurants HTML and add them to the webpage.
+ */
+function fillRestaurantsHTML(restaurants = self.restaurants) {
+	const ul = document.getElementById(`restaurants-list`);
+	restaurants.forEach(restaurant => {
+		ul.append(createRestaurantHTML(restaurant));
+	});
+	addMarkersToMap();
+	enableLazyLoading();
+}
+
+/**
+ * Create restaurant HTML.
+ */
+function createRestaurantHTML(restaurant) {
+	restaurant.rating = getRestaurantRating(restaurant);
+	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, ``);
+	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
+	const imageFileExtension = `jpg`;
+	const li = document.createElement(`li`);
+	li.innerHTML = `
+		<a href="${DBHelper.urlForRestaurant(restaurant)}" aria-label="${restaurant.name}">
+			<figure>
+				<picture>
+					<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+							sizes="100vw"></source>
+					<source class="lazy"  media="(max-width: 960px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+							sizes="50vw"></source>
+					<source class="lazy"  media="(min-width: 960px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+							sizes="360px"></source>
+					<img class="lazy" src="placeholder-image.jpg" data-src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
+				</picture>
+				<figcaption>
+					<h1>${restaurant.name} <span class="pull-right icon ion-android-favorite" aria-label="Average rating">${restaurant.rating}</span></h1>
+					<p>
+						<span class="icon ion-android-restaurant" aria-label="Cuisine Type">${restaurant.cuisine_type}</span>
+						<span class="icon ion-location pull-right" aria-label="Neighborhood">${restaurant.neighborhood}</span>
+					</p>
+				</figcaption>
+			</figure>
+		</a>`;
+
+	return li;
+}
+/*
+ * Get rating average for restaurant from its reviews
+ */
+function getRestaurantRating(restaurant) {
+	var sum = restaurant.reviews.reduce((total, review) => total + review.rating, 0) * 10;
+	return Math.round(sum / restaurant.reviews.length, 1) / 10;
+}
+
+/**
+ * Add markers for current restaurants to the map.
+ */
+function addMarkersToMap(restaurants = self.restaurants) {
+	if (!self.map || !restaurants) return;
+	restaurants.forEach(restaurant => {
+		// Add marker to the map
+		const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
+		google.maps.event.addListener(marker, `click`, () => {
+			window.location.href = marker.url;
+		});
+		self.markers.push(marker);
+	});
+}
+/**
+ * Add markers for current restaurants to the map.
+ */
+function enableLazyLoading() {
+	var lazyImages = [].slice.call(document.querySelectorAll(`.lazy`));
+	if (`IntersectionObserver` in window) {
+		let lazyImageObserver = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					let lazyImage = entry.target;
+					lazyImage.src = lazyImage.dataset.src;
+					lazyImage.srcset = lazyImage.dataset.srcset;
+					lazyImage.classList.remove(`lazy`);
+					lazyImageObserver.unobserve(lazyImage);
+				}
+			});
+		});
+		lazyImages.forEach(lazyImage => lazyImageObserver.observe(lazyImage));
+	} else {
+		// Possibly fall back to a more compatible method here
+	}
+}

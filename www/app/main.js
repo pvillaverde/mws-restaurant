@@ -1,2 +1,58 @@
-"use strict";function _registerServiceWorker(){if(navigator.serviceWorker){navigator.serviceWorker.register("/sw.js").then(function(e){navigator.serviceWorker.controller&&(e.waiting?_updateReady(e.waiting):e.installing?_trackInstalling(e.installing):e.addEventListener("updatefound",function(){_trackInstalling(e.installing)}))});var e=void 0;navigator.serviceWorker.addEventListener("controllerchange",function(){e||(window.location.reload(),e=!0)})}}function _trackInstalling(e){e.addEventListener("statechange",function(){"installed"==e.state&&_updateReady(e)})}function _updateReady(e){confirm("New version is available!")&&e.postMessage({action:"skipWaiting"})}document.addEventListener("DOMContentLoaded",function(e){_registerServiceWorker()});
-//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1haW4uanMiXSwibmFtZXMiOlsiX3JlZ2lzdGVyU2VydmljZVdvcmtlciIsIm5hdmlnYXRvciIsInNlcnZpY2VXb3JrZXIiLCJ0aGVuIiwicmVnIiwicmVnaXN0ZXIiLCJ3YWl0aW5nIiwiX3VwZGF0ZVJlYWR5IiwiaW5zdGFsbGluZyIsIl90cmFja0luc3RhbGxpbmciLCJhZGRFdmVudExpc3RlbmVyIiwicmVmcmVzaGluZyIsIndvcmtlciIsImNvbmZpcm0iLCJ1cGRhdGVBdmFpbGFibGUiLCJkb2N1bWVudCIsImV2ZW50Il0sIm1hcHBpbmdzIjoiYUFTQSxTQUFTQSx5QkFDUixHQUFLQyxVQUFVQyxjQUFmLENBQUFELFVBQUtBLGNBQVVDLFNBQWYsVUFBOEJDLEtBQUEsU0FBQUMsR0FFOUJILFVBQVVDLGNBQWNHLGFBS25CRCxFQUFJRSxRQURSQyxhQUFBSCxFQUFBRSxTQU9JRixFQUFJSSxXQURSQyxpQkFBQUwsRUFBQUksWUFJQ0osRUFBQU0saUJBQUEsY0FBQSxXQUNERCxpQkFBQUwsRUFBQUksaUJBT0QsSUFBSUcsT0FBQUEsRUFESlYsVUFBQUMsY0FBQVEsaUJBQUEsbUJBQUEsV0FDSUMsSUFDSlYsT0FBQUEsU0FBVUMsU0FDVFMsR0FBSUEsTUFJTCxTQUFBRixpQkFBQUcsR0FHQUEsRUFBT0YsaUJBQVAsY0FBdUMsV0FEeEMsYUFBQUUsRUFBU0gsT0FDUkcsYUFBT0YsS0FNUixTQUFTSCxhQUFhSyxHQUNyQkMsUUFBQUEsOEJBRUFELEVBQUlFLFlBQUosQ0FDQ0YsT0FBQUEsZ0JBbERGRyxTQUFTTCxpQkFBVCxtQkFBOEMsU0FBQ00sR0FDOUNoQiIsImZpbGUiOiJtYWluLmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXHJcbiAqIEZldGNoIG5laWdoYm9yaG9vZHMgYW5kIGN1aXNpbmVzIGFzIHNvb24gYXMgdGhlIHBhZ2UgaXMgbG9hZGVkLlxyXG4gKi9cclxuZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcihgRE9NQ29udGVudExvYWRlZGAsIChldmVudCkgPT4ge1xyXG5cdF9yZWdpc3RlclNlcnZpY2VXb3JrZXIoKTtcclxufSk7XHJcbi8qKlxyXG4gKiBSZWdpc3RlciBzZXJ2aWNlIHdvcmtlclxyXG4gKi9cclxuZnVuY3Rpb24gX3JlZ2lzdGVyU2VydmljZVdvcmtlcigpIHtcclxuXHRpZiAoIW5hdmlnYXRvci5zZXJ2aWNlV29ya2VyKSByZXR1cm47XHJcblxyXG5cdG5hdmlnYXRvci5zZXJ2aWNlV29ya2VyLnJlZ2lzdGVyKGAvc3cuanNgKS50aGVuKChyZWcpID0+IHtcclxuXHRcdC8qIElmIHRoZXJlIGlzbnQgY29udHJvbGVyLCBwYWdlIHdhbnNuJ3QgbG9hZCB2aWEgU1cuIFNvIHRoZXkgYXJlIG9uIGxhdGVzdC4gRXhpdCBlYXJsaWVyKi9cclxuXHRcdGlmICghbmF2aWdhdG9yLnNlcnZpY2VXb3JrZXIuY29udHJvbGxlcikgcmV0dXJuO1xyXG5cclxuXHRcdC8qIElmIHRoZXJlIGlzIGFscmVhZHkgd2FpdGluZywgY2FsbCB1cGRhdGVSZWFkeSovXHJcblx0XHRpZiAocmVnLndhaXRpbmcpIHtcclxuXHRcdFx0X3VwZGF0ZVJlYWR5KHJlZy53YWl0aW5nKTtcclxuXHRcdFx0cmV0dXJuO1xyXG5cdFx0fVxyXG5cclxuXHRcdC8qIElmIHRoZXJlIGlzIGluc3RhbGxpbmcsIHdlJ2xsIHRyYWNrIGl0cyBzdGF0ZSB1bnRpbCBpdCBiZWNvbWVzIGluc3RhbGxlZC4qL1xyXG5cdFx0aWYgKHJlZy5pbnN0YWxsaW5nKSB7XHJcblx0XHRcdF90cmFja0luc3RhbGxpbmcocmVnLmluc3RhbGxpbmcpO1xyXG5cdFx0XHRyZXR1cm47XHJcblx0XHR9XHJcblx0XHQvKiBPdGhlcndpc2UsIHdlIGxpc3RlbiBmb3IgbmV3IGluc3RhbGxpbmcgU1cgYXJyaXZpbmcgYW5kIHRyYWNrIGl0IHRvby4gKi9cclxuXHRcdHJlZy5hZGRFdmVudExpc3RlbmVyKGB1cGRhdGVmb3VuZGAsICgpID0+IHtcclxuXHRcdFx0X3RyYWNrSW5zdGFsbGluZyhyZWcuaW5zdGFsbGluZyk7XHJcblx0XHR9KTtcclxuXHR9KTtcclxuXHJcblx0LyogUmVsb2FkIHBhZ2Ugd2hlbiBTVyBjaGFuZ2VkICovXHJcblx0bGV0IHJlZnJlc2hpbmc7XHJcblx0bmF2aWdhdG9yLnNlcnZpY2VXb3JrZXIuYWRkRXZlbnRMaXN0ZW5lcihgY29udHJvbGxlcmNoYW5nZWAsICgpID0+IHtcclxuXHRcdGlmIChyZWZyZXNoaW5nKSByZXR1cm47XHJcblx0XHR3aW5kb3cubG9jYXRpb24ucmVsb2FkKCk7XHJcblx0XHRyZWZyZXNoaW5nID0gdHJ1ZTtcclxuXHR9KTtcclxufVxyXG5cclxuZnVuY3Rpb24gX3RyYWNrSW5zdGFsbGluZyh3b3JrZXIpIHtcclxuXHR3b3JrZXIuYWRkRXZlbnRMaXN0ZW5lcihgc3RhdGVjaGFuZ2VgLCAoKSA9PiB7XHJcblx0XHRpZiAod29ya2VyLnN0YXRlID09IGBpbnN0YWxsZWRgKVxyXG5cdFx0XHRfdXBkYXRlUmVhZHkod29ya2VyKTtcclxuXHR9KTtcclxufVxyXG5cclxuZnVuY3Rpb24gX3VwZGF0ZVJlYWR5KHdvcmtlcikge1xyXG5cdC8vIFNob3cgYW4gdXBkYXRlIGlzIGF2YWlsYWJsZSBhbmQgYXNrIHRoZSB1c2VyIHRvIHJlZnJlc2ggc2VydmljZSB3b3JrZXIuXHJcblx0bGV0IHVwZGF0ZUF2YWlsYWJsZSA9IGNvbmZpcm0oYE5ldyB2ZXJzaW9uIGlzIGF2YWlsYWJsZSFgKTtcclxuXHRpZiAodXBkYXRlQXZhaWxhYmxlKSB7XHJcblx0XHR3b3JrZXIucG9zdE1lc3NhZ2Uoe1xyXG5cdFx0XHRhY3Rpb246IGBza2lwV2FpdGluZ2BcclxuXHRcdH0pO1xyXG5cdH1cclxufSJdfQ==
+/**
+ * Fetch neighborhoods and cuisines as soon as the page is loaded.
+ */
+document.addEventListener(`DOMContentLoaded`, ( /*event*/ ) => {
+	_registerServiceWorker();
+});
+/**
+ * Register service worker
+ */
+function _registerServiceWorker() {
+	if (!navigator.serviceWorker) return;
+
+	navigator.serviceWorker.register(`/sw.js`).then((reg) => {
+		/* If there isnt controler, page wansn't load via SW. So they are on latest. Exit earlier*/
+		if (!navigator.serviceWorker.controller) return;
+
+		/* If there is already waiting, call updateReady*/
+		if (reg.waiting) {
+			_updateReady(reg.waiting);
+			return;
+		}
+
+		/* If there is installing, we'll track its state until it becomes installed.*/
+		if (reg.installing) {
+			_trackInstalling(reg.installing);
+			return;
+		}
+		/* Otherwise, we listen for new installing SW arriving and track it too. */
+		reg.addEventListener(`updatefound`, () => {
+			_trackInstalling(reg.installing);
+		});
+	});
+
+	/* Reload page when SW changed */
+	let refreshing;
+	navigator.serviceWorker.addEventListener(`controllerchange`, () => {
+		if (refreshing) return;
+		window.location.reload();
+		refreshing = true;
+	});
+}
+
+function _trackInstalling(worker) {
+	worker.addEventListener(`statechange`, () => {
+		if (worker.state == `installed`)
+			_updateReady(worker);
+	});
+}
+
+function _updateReady(worker) {
+	// Show an update is available and ask the user to refresh service worker.
+	let updateAvailable = confirm(`New version is available!`);
+	if (updateAvailable) {
+		worker.postMessage({
+			action: `skipWaiting`
+		});
+	}
+}
