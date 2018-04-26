@@ -6,7 +6,7 @@ const gulp = require(`gulp`),
 		pattern: [`gulp-*`, `del`]
 	});
 
-gulp.task(`build`, [`lint`, `copy-default`, `build-scripts`, `sass`, `images`], () => {
+gulp.task(`build`, [ /*`lint`,*/ `copy-default`, `build-scripts`, `sass`, `images`], () => {
 
 });
 
