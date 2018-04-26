@@ -113,7 +113,7 @@ function createReviewHTML(review) {
 		<author>${review.name}</author>
 		<time datetime="${review.date}">${review.date}</time>
 		<meter class="meter-5-hearth" max="5" value="${review.rating}"></meter>
-		<span aria-role="presentation" aria-label="Rating ${review.rating} out of 5" data-value="${review.rating}"></span>
+		<span role="presentation" aria-label="Rating ${review.rating} out of 5" data-value="${review.rating}"></span>
 		<p>${review.comments}</p>`;
 	return article;
 }

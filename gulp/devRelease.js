@@ -16,6 +16,11 @@ gulp.task(`dev-watch`, [`copy-default`, `copy-scripts`, `images`, `sass`], () =>
 			target: `localhost:1337`,
 			middleware: [$.compression()]
 		},*/
+		/*https: true,*/
+		/*https: {
+		    key: "path-to-custom.key",
+		    cert: "path-to-custom.crt"
+		}*/
 		port: 8000,
 	});
 	browserSync.stream();

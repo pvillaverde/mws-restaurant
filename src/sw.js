@@ -1,4 +1,4 @@
-const staticCacheName = `restaurants-static-v13`;
+const staticCacheName = `restaurants-static-v17`;
 const contentImgsCache = `restaurants-content-imgs`;
 const allCaches = [staticCacheName, contentImgsCache];
 
@@ -14,13 +14,17 @@ self.addEventListener(`install`, (event) => {
 		`/app/idb.js`,
 		`/app/restaurant_info.js`,
 		`/app/restaurants_index.js`,
-		`/assets/favicon.ico`,
+		`/assets/icons/favicon.ico`,
 		`/assets/css/styles.css`,
+		`/assets/css/ionicons.min.css`,
+		`/assets/css/normalize.min.css`,
+		`/assets/fonts/ionicons.woff`,
+		`/assets/fonts/ionicons.ttf`,
 		/*`/data/restaurants.json`,*/
-		`https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css`,
+		/*`https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css`,
 		`https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css`,
 		`https://code.ionicframework.com/ionicons/2.0.1/fonts/ionicons.woff?v=2.0.1`,
-		`https://code.ionicframework.com/ionicons/2.0.1/fonts/ionicons.ttf?v=2.0.1`
+		`https://code.ionicframework.com/ionicons/2.0.1/fonts/ionicons.ttf?v=2.0.1`*/
 	];
 	event.waitUntil(
 		caches.open(staticCacheName).then((cache) => cache.addAll(urlsToCache))

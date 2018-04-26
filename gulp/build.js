@@ -10,21 +10,14 @@ gulp.task(`build`, [`lint`, `copy-default`, `build-scripts`, `sass`, `images`], 
 
 });
 
-gulp.task(`copy-default`, [`copy-html`, `copy-css`, `copy-fonts`, `copy-sw`]);
-gulp.task(`copy-html`, () => {
-	return gulp.src([`${conf.paths.src}/**/*.html`])
-		.pipe(gulp.dest(conf.paths.dest));
-});
-gulp.task(`copy-css`, () => {
-	return gulp.src([`${conf.paths.src}/**/*.css`])
-		.pipe(gulp.dest(conf.paths.dest));
-});
-gulp.task(`copy-fonts`, () => {
-	return gulp.src([`${conf.paths.src}/**/*.{eot,svg,ttf,woff,woff2}`])
-		.pipe(gulp.dest(conf.paths.dest));
-});
-gulp.task(`copy-sw`, () => {
-	return gulp.src([`${conf.paths.src}/sw.js`])
+gulp.task(`copy-default`, () => {
+	return gulp.src([
+			`${conf.paths.src}/sw.js`,
+			`${conf.paths.src}/manifest.json`,
+			`${conf.paths.src}/**/*.html`,
+			`${conf.paths.src}/**/*.css`,
+			`${conf.paths.src}/**/*.{eot,svg,ttf,woff,woff2}`
+		])
 		.pipe(gulp.dest(conf.paths.dest));
 });
 gulp.task(`copy-scripts`, () => {

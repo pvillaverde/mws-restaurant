@@ -17,8 +17,8 @@ gulp.task(`images`, (done) => {
 			suffix: `-800`
 		}
 	}];
-	gulp.src(`${conf.paths.src}/assets/favicon.ico`)
-		.pipe(gulp.dest(`${conf.paths.dest}/assets/`));
+	gulp.src(`${conf.paths.src}/assets/icons/**/*`)
+		.pipe(gulp.dest(`${conf.paths.dest}/assets/icons/`));
 	gulp.src(`${conf.paths.src}/assets/src-images/**/*`)
 		.pipe($.responsive({
 			'*': restaurantImagesOptions
