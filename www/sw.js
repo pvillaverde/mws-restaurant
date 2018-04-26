@@ -1,4 +1,4 @@
-const staticCacheName = `restaurants-static-v18`;
+const staticCacheName = `restaurants-static-v20`;
 const contentImgsCache = `restaurants-content-imgs`;
 const allCaches = [staticCacheName, contentImgsCache];
 
@@ -16,10 +16,11 @@ self.addEventListener(`install`, (event) => {
 		`/app/restaurants_index.js`,
 		`/assets/icons/favicon.ico`,
 		`/assets/css/styles.css`,
-		`/assets/css/ionicons.min.css`,
 		`/assets/css/normalize.min.css`,
-		`/assets/fonts/ionicons.woff`,
-		`/assets/fonts/ionicons.ttf`,
+		`/assets/fonts/MaterialIcons-Regular.woff`,
+		`/assets/fonts/MaterialIcons-Regular.woff2`,
+		`/assets/fonts/MaterialIcons-Regular.ttf`,
+		`/assets/fonts/MaterialIcons-Regular.eot`,
 		/*`/data/restaurants.json`,*/
 		/*`https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css`,
 		`https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css`,

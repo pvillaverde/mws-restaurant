@@ -18,6 +18,13 @@ window.initMap = () => {
 			scrollwheel: false
 		});
 		DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+		/* Set alt attributes on maps images so they dont get readed by screenReaders */
+		google.maps.event.addListener(self.map, `tilesloaded`, function(evt) {
+			var noAltImages = [].slice.call(document.querySelectorAll(`img:not([alt])`));
+			noAltImages.forEach(img => {
+				if (!img.alt) img.alt = ``;
+			});
+		});
 	}).catch((error) => console.error(error));
 };
 

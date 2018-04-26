@@ -1,5 +1,4 @@
 /* ====================== Restaurant Filtering ====================== */
-
 fieldset.filter-options {
 	text-align      : center;
 	padding-top     : 50px;
@@ -10,8 +9,8 @@ fieldset.filter-options {
 	box-shadow      : 0 4px 8px 0 grey;
 
 	legend {
-		&::before {
-			color  : $secondary;
+		.material-icons {
+			color  : $secondary-dark-dark;
 			padding: 0 5px;
 		}
 		border          : 1px solid grey;
@@ -34,6 +33,7 @@ fieldset.filter-options {
 	}
 }
 /* ====================== Restaurant Listing ====================== */
+
 #restaurants-list {
 	display   : flex;
 	flex-flow : row wrap;
@@ -84,16 +84,16 @@ fieldset.filter-options {
 					text-transform: uppercase;
 				}
 
-				.ion-android-favorite {
+				.rating {
 					color: #585858;
 
-					&::before {
+					.material-icons {
 						color  : red;
 						padding: 0 5px;
 					}
 				}
 
-				span.icon::before {
+				span.material-icons::before {
 					padding  : 0 5px;
 					font-size: 120%;
 				}

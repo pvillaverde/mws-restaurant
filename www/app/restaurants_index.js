@@ -74,6 +74,13 @@ window.initMap = () => {
 		center: loc,
 	});
 	addMarkersToMap();
+	/* Set alt attributes on maps images so they dont get readed by screenReaders */
+	google.maps.event.addListener(self.map, `tilesloaded`, function(evt) {
+		var noAltImages = [].slice.call(document.querySelectorAll(`img:not([alt])`));
+		noAltImages.forEach(img => {
+			if (!img.alt) img.alt = ``;
+		});
+	});
 };
 
 /**
@@ -145,10 +152,10 @@ function createRestaurantHTML(restaurant) {
 					<img class="lazy" src="placeholder-image.jpg" data-src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
 				</picture>
 				<figcaption>
-					<h1>${restaurant.name} <span class="pull-right icon ion-android-favorite" aria-label="Average rating">${restaurant.rating}</span></h1>
+					<h1>${restaurant.name} <span class="pull-right rating"><i class="material-icons" aria-label="Average rating">favorite</i>${restaurant.rating}</span></h1>
 					<p>
-						<span class="icon ion-android-restaurant" aria-label="Cuisine Type">${restaurant.cuisine_type}</span>
-						<span class="icon ion-location pull-right" aria-label="Neighborhood">${restaurant.neighborhood}</span>
+						<span><i class="material-icons" aria-label="Cuisine Type">restaurant_menu</i>${restaurant.cuisine_type}</span>
+						<span class="pull-right"><i class="material-icons" aria-label="Neighborhood">location_on</i>${restaurant.neighborhood}</span>
 					</p>
 				</figcaption>
 			</figure>
