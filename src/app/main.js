@@ -1,4 +1,3 @@
-let indexDB;
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */

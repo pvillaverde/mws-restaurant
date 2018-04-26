@@ -58,11 +58,11 @@ function fillRestaurantHTML(restaurant = self.restaurant) {
 	const imageFileExtension = `jpg`;
 	const imageContainer = document.getElementById(`img-container`);
 	imageContainer.innerHTML = `<picture>
-			<source media="(max-width: 600px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
 					sizes="100vw"></source>
-			<source media="(min-width: 600px)" srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
 					sizes="50vw"></source>
-			<img src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
+			<img class="lazy" src="placeholder-image.jpg" data-src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
 		</picture>`;
 
 	const cuisine = document.getElementById(`restaurant-cuisine`);
@@ -102,6 +102,7 @@ function fillReviewsHTML(reviews = self.restaurant.reviews) {
 	reviews.forEach(review => {
 		container.appendChild(createReviewHTML(review));
 	});
+	enableLazyLoading();
 }
 
 /**
@@ -142,4 +143,26 @@ function getParameterByName(name, url) {
 	if (!results[2])
 		return ``;
 	return decodeURIComponent(results[2].replace(/\+/g, ` `));
+}
+/**
+ * Add markers for current restaurants to the map.
+ */
+function enableLazyLoading() {
+	var lazyImages = [].slice.call(document.querySelectorAll(`.lazy`));
+	if (`IntersectionObserver` in window) {
+		let lazyImageObserver = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					let lazyImage = entry.target;
+					lazyImage.src = lazyImage.dataset.src;
+					lazyImage.srcset = lazyImage.dataset.srcset;
+					lazyImage.classList.remove(`lazy`);
+					lazyImageObserver.unobserve(lazyImage);
+				}
+			});
+		});
+		lazyImages.forEach(lazyImage => lazyImageObserver.observe(lazyImage));
+	} else {
+		// Possibly fall back to a more compatible method here
+	}
 }
