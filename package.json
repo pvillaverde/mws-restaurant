@@ -3,7 +3,6 @@
 	"version": "1.0.1",
 	"description": "Mobile Web Specialist Nanodegree Project 2018",
 	"devDependencies": {
-		"idb": "^2.1.1",
 		"babel-core": "^6.26.0",
 		"babel-plugin-es6-promise": "^1.1.1",
 		"babel-preset-env": "^1.6.1",
@@ -30,6 +29,8 @@
 		"gulp-sourcemaps": "^2.6.4",
 		"gulp-uglify": "^3.0.0",
 		"gulp-util": "^3.0.8",
+		"hoek": "^5.0.3",
+		"idb": "^2.1.1",
 		"sharp": "^0.20.1",
 		"uglify-js": "^3.3.21",
 		"wrench": "^1.5.9"
