@@ -123,43 +123,50 @@ function resetRestaurants(restaurants) {
  */
 function fillRestaurantsHTML(restaurants = self.restaurants) {
 	const ul = document.getElementById(`restaurants-list`);
+	let promises = [];
 	restaurants.forEach(restaurant => {
-		ul.append(createRestaurantHTML(restaurant));
+		promises.push(getRestaurantRating(restaurant).then(rating => {
+			restaurant.rating = rating;
+			ul.append(createRestaurantHTML(restaurant));
+		}));
+		//ul.append(createRestaurantHTML(restaurant));
 	});
-	addMarkersToMap();
-	enableLazyLoading();
+	Promise.all(promises).then(() => {
+		addMarkersToMap();
+		enableLazyLoading();
+	});
 }
 
 /**
  * Create restaurant HTML.
  */
 function createRestaurantHTML(restaurant) {
-	restaurant.rating = getRestaurantRating(restaurant);
+	//restaurant.rating = getRestaurantRating(restaurant);
 	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, ``);
 	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
 	const imageFileExtension = `jpg`;
 	const li = document.createElement(`li`);
 	li.innerHTML = `
-		<a href="${DBHelper.urlForRestaurant(restaurant)}" aria-label="${restaurant.name}">
-			<figure>
-				<picture>
-					<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
-							sizes="100vw"></source>
-					<source class="lazy"  media="(max-width: 960px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
-							sizes="50vw"></source>
-					<source class="lazy"  media="(min-width: 960px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
-							sizes="360px"></source>
-					<img class="lazy" src="placeholder-image.jpg" data-src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
-				</picture>
-				<figcaption>
-					<h1>${restaurant.name} <span class="pull-right rating"><i class="material-icons" aria-label="Average rating">favorite</i>${restaurant.rating}</span></h1>
-					<p>
-						<span><i class="material-icons" aria-label="Cuisine Type">restaurant_menu</i>${restaurant.cuisine_type}</span>
-						<span class="pull-right"><i class="material-icons" aria-label="Neighborhood">location_on</i>${restaurant.neighborhood}</span>
-					</p>
-				</figcaption>
-			</figure>
-		</a>`;
+	<a href="${DBHelper.urlForRestaurant(restaurant)}" aria-label="${restaurant.name}">
+		<figure>
+			<picture>
+				<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+						sizes="100vw"></source>
+				<source class="lazy"  media="(max-width: 960px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+						sizes="50vw"></source>
+				<source class="lazy"  media="(min-width: 960px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
+						sizes="360px"></source>
+				<img class="lazy" src="placeholder-image.jpg" data-src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
+			</picture>
+			<figcaption>
+				<h1>${restaurant.name} <span class="pull-right rating"><i class="material-icons" aria-label="Average rating">favorite</i>${restaurant.rating}</span></h1>
+				<p>
+					<span><i class="material-icons" aria-label="Cuisine Type">restaurant_menu</i>${restaurant.cuisine_type}</span>
+					<span class="pull-right"><i class="material-icons" aria-label="Neighborhood">location_on</i>${restaurant.neighborhood}</span>
+				</p>
+			</figcaption>
+		</figure>
+	</a>`;
 
 	return li;
 }
@@ -167,8 +174,10 @@ function createRestaurantHTML(restaurant) {
  * Get rating average for restaurant from its reviews
  */
 function getRestaurantRating(restaurant) {
-	var sum = restaurant.reviews.reduce((total, review) => total + review.rating, 0) * 10;
-	return Math.round(sum / restaurant.reviews.length, 1) / 10;
+	return DBHelper.fetchReviews(restaurant.id).then(reviews => {
+		var sum = reviews.reduce((total, review) => total + review.rating, 0) * 10;
+		return Math.round(sum / reviews.length, 1) / 10;
+	});
 }
 
 /**

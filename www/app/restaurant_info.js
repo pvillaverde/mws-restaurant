@@ -80,7 +80,7 @@ function fillRestaurantHTML(restaurant = self.restaurant) {
 		fillRestaurantHoursHTML();
 	}
 	// fill reviews
-	fillReviewsHTML();
+	fillReviewsHTML(restaurant);
 }
 
 /**
@@ -98,16 +98,18 @@ function fillRestaurantHoursHTML(operatingHours = self.restaurant.operating_hour
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-function fillReviewsHTML(reviews = self.restaurant.reviews) {
-	const container = document.getElementById(`reviews-list`);
-	if (!reviews) {
-		const noReviews = document.createElement(`p`);
-		noReviews.innerHTML = `No reviews yet!`;
-		container.appendChild(noReviews);
-		return;
-	}
-	reviews.forEach(review => {
-		container.appendChild(createReviewHTML(review));
+function fillReviewsHTML(restaurant) {
+	DBHelper.fetchReviews(restaurant.id).then(reviews => {
+		const container = document.getElementById(`reviews-list`);
+		if (!reviews) {
+			const noReviews = document.createElement(`p`);
+			noReviews.innerHTML = `No reviews yet!`;
+			container.appendChild(noReviews);
+			return;
+		}
+		reviews.forEach(review => {
+			container.appendChild(createReviewHTML(review));
+		});
 	});
 	enableLazyLoading();
 }
@@ -117,6 +119,13 @@ function fillReviewsHTML(reviews = self.restaurant.reviews) {
  */
 function createReviewHTML(review) {
 	const article = document.createElement(`article`);
+	const options = {
+		day: `2-digit`,
+		//weekday: `long`,
+		year: `2-digit`,
+		month: `2-digit`,
+	};
+	review.date = new Date(review.updatedAt).toLocaleString(`es-es`, options);
 	article.innerHTML = `
 		<author>${review.name}</author>
 		<time datetime="${review.date}">${review.date}</time>

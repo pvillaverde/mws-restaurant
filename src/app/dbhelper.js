@@ -8,7 +8,7 @@ class DBHelper {
 	 */
 	static get DATABASE_URL() {
 		const port = 1337; // Change this to your server port
-		return `http://localhost:${port}/restaurants`;
+		return `http://localhost:${port}`;
 		/*return `/data/restaurants.json`;*/
 	}
 
@@ -20,7 +20,7 @@ class DBHelper {
 			return Promise.resolve();
 		}
 
-		return idb.open(`review-restaurants`, 1, (upgradeDB) => {
+		return idb.open(`review-restaurants`, 2, (upgradeDB) => {
 			switch (upgradeDB.oldVersion) {
 				case 0:
 					{
@@ -29,6 +29,14 @@ class DBHelper {
 						});
 						restaurantsStore.createIndex(`by-cuisine`, `cuisine_type`);
 						restaurantsStore.createIndex(`by-neighborhood`, `neighborhood`);
+					}
+					// break omitted
+				case 1:
+					{
+						const reviewsStore = upgradeDB.createObjectStore(`reviews`, {
+							keyPath: `id`
+						});
+						reviewsStore.createIndex(`by-restaurant`, `restaurant_id`);
 					}
 			}
 		});
@@ -57,13 +65,14 @@ class DBHelper {
 	}
 
 	static getRestaurantsFromRemote() {
-		return fetch(DBHelper.DATABASE_URL)
+		return fetch(`${DBHelper.DATABASE_URL}/restaurants`)
 			.then(response => response.json())
 			.then(restaurants => {
 				DBHelper.addRestaurantsToIndexDB(restaurants);
 				return restaurants;
 			});
 	}
+
 
 	static addRestaurantsToIndexDB(restaurants) {
 		return DBHelper.openDatabase().then((db) => {
@@ -77,6 +86,46 @@ class DBHelper {
 	}
 
 	/**
+	 * Fetch all reviews.
+	 */
+	static fetchReviews(restaurant) {
+		return DBHelper.getReviewsFromLocal(restaurant).then(reviews => {
+			if (reviews && reviews.length) {
+				DBHelper.getReviewsFromRemote(restaurant);
+				return reviews;
+			} else {
+				return DBHelper.getReviewsFromRemote(restaurant);
+			}
+		});
+	}
+	static getReviewsFromLocal(restaurant) {
+		return DBHelper.openDatabase().then((db) => {
+			if (!db) return;
+
+			return db.transaction(`reviews`).objectStore(`reviews`).index(`by-restaurant`).getAll(restaurant);
+		});
+	}
+
+	static getReviewsFromRemote(restaurant) {
+		return fetch(`${DBHelper.DATABASE_URL}/reviews/?restaurant_id=${restaurant}`)
+			.then(response => response.json())
+			.then(reviews => {
+				DBHelper.addReviewsToIndexDB(reviews);
+				return reviews;
+			});
+	}
+	static addReviewsToIndexDB(reviews) {
+		return DBHelper.openDatabase().then((db) => {
+			if (!db) return;
+
+			const tx = db.transaction(`reviews`, `readwrite`);
+			const store = tx.objectStore(`reviews`);
+			reviews.forEach(review => store.put(review));
+			return tx.complete;
+		});
+	}
+
+	/**
 	 * Fetch a restaurant by its ID.
 	 */
 	static fetchRestaurantById(id) {
@@ -85,7 +134,7 @@ class DBHelper {
 			//parseInt because id are stored as integers on database
 			return db.transaction(`restaurants`).objectStore(`restaurants`).get(parseInt(id));
 		}).then(restaurant => {
-			return restaurant || fetch(`${DBHelper.DATABASE_URL}/${id}`)
+			return restaurant || fetch(`${DBHelper.DATABASE_URL}/restaurants/${id}`)
 				.then(response => response.json());
 		});
 	}
