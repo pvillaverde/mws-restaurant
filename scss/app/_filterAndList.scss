@@ -1,5 +1,5 @@
 /* ====================== Restaurant Filtering ====================== */
-fieldset.filter-options {
+.filter-options {
 	text-align      : center;
 	padding-top     : 50px;
 	background-color: $secondary-light;
@@ -58,46 +58,47 @@ fieldset.filter-options {
 			width: 100%;
 		}
 		//width           : calc((100%-180px)/3);
-		figure {
-			margin: 0;
-
-			img {
-				background-color: #ccc;
-				display         : block;
-				margin          : 0;
-				max-width       : 100%;
-				//min-height      : 248px;
-				min-width       : 100%;
-			}
-
-			figcaption {
-				padding: 0 10px 10px;
-
-				h1 {
-					color         : $secondary-dark-dark;
-					font-family   : Arial, sans-serif;
-					font-size     : 16px;
-					font-weight   : 200;
-					letter-spacing: 0;
-					line-height   : 1.3;
-					margin        : 10px 0 30px;
-					text-transform: uppercase;
-				}
-
-				.rating {
-					color: #585858;
-
-					.material-icons {
-						color  : red;
-						padding: 0 5px;
-					}
-				}
-
-				span.material-icons::before {
-					padding  : 0 5px;
-					font-size: 120%;
-				}
-			}
-		}
 	}
+
+	figure {
+		margin: 0;
+	}
+
+	img {
+		background-color: #ccc;
+		display         : block;
+		margin          : 0;
+		max-width       : 100%;
+		//min-height      : 248px;
+		min-width       : 100%;
+	}
+
+	figcaption {
+		padding: 0 10px 10px;
+	}
+
+	h1 {
+		color         : $secondary-dark-dark;
+		font-family   : Arial, sans-serif;
+		font-size     : 16px;
+		font-weight   : 200;
+		letter-spacing: 0;
+		line-height   : 1.3;
+		margin        : 10px 0 30px;
+		text-transform: uppercase;
+	}
+}
+
+.rating {
+	color: #585858;
+
+	.material-icons {
+		color  : red;
+		padding: 0 5px;
+	}
+}
+
+span.material-icons::before {
+	padding  : 0 5px;
+	font-size: 120%;
 }

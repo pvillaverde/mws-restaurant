@@ -1,149 +1,147 @@
 /* ====================== Restaurant Details ====================== */
 
-article#restaurant-container {
-	header {
-		background-color: $secondary-light;
-		box-shadow      : 0 2px 5px rgba(0, 0, 0, 0.26);
-		text-align      : center;
-		line-height     : 2;
-		margin          : 0 0 20px;
+.restaurant-header {
+	background-color: $secondary-light;
+	box-shadow      : 0 2px 5px rgba(0, 0, 0, 0.26);
+	text-align      : center;
+	line-height     : 2;
+	margin          : 0 0 20px;
 
-		h1 {
-			text-transform: uppercase;
-			margin        : 0;
-		}
-
-		h2 {
-			margin   : 0;
-			font-size: 1.3em;
-		}
+	h1 {
+		text-transform: uppercase;
+		margin        : 0;
 	}
 
-	section#restaurant-details {
-		margin    : 20px 10px 50px;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
-		display   : flex;
-		flex-flow : row wrap;
-		@media screen and(min-width: $break-small) {
-			box-shadow: none;
+	h2 {
+		margin   : 0;
+		font-size: 1.3em;
+	}
+}
+
+.restaurant-details {
+	margin    : 20px 10px 50px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+	display   : flex;
+	flex-flow : row wrap;
+	@media screen and(min-width: $break-small) {
+		box-shadow: none;
+	}
+
+	figure {
+		position: relative;
+		padding : 10px;
+		@media screen and(min-width: $break-medium) {
+			width : calc((100% - 300px)/2);
+			margin: 0;
+
+			#map {
+				height: 300px;
+			}
+		}
+		@media screen and(max-width: $break-medium) {
+			width : 100%;
+			margin: 20px auto 0;
 		}
 
-		#img-container {
-			@media screen and(min-width: $break-medium) {
-				width: calc((100% - 300px)/2);
-			}
-			@media screen and(max-width: $break-medium) {
-				width: 50%;
-			}
-			@media screen and(max-width: $break-small) {
-				width: 100%;
-			}
-
-			img {
-				max-width: 100%;
-			}
-		}
-
-		#hours-container {
+		figcaption {
 			text-align: center;
-			@media screen and(min-width: $break-medium) {
-				width: 280px;
-			}
-			@media screen and(max-width: $break-medium) {
-				width: 50%;
-			}
-			@media screen and(max-width: $break-small) {
-				width: 100%;
-			}
-
-			table {
-				margin: auto;
-
-				caption {
-					font-weight: bold;
-					font-size  : 16px;
-				}
-
-				th {
-					text-align: left;
-				}
-			}
-		}
-
-		figure {
-			position: relative;
-			padding : 10px;
-			@media screen and(min-width: $break-medium) {
-				width : calc((100% - 300px)/2);
-				margin: 0;
-
-				#map {
-					height: 300px;
-				}
-			}
-			@media screen and(max-width: $break-medium) {
-				width : 100%;
-				margin: 20px auto 0;
-			}
-
-			figcaption {
-				text-align: center;
-			}
 		}
 	}
+}
 
-	#reviews-section {
-		> h1 {
-			margin        : 20px auto;
-			width         : 30%;
-			text-transform: uppercase;
-			line-height   : 1.1;
-			text-align    : center;
-			font-family   : Arial, sans-serif;
-			border-bottom : 1px solid #d4d4d4;
+#img-container {
+	@media screen and(min-width: $break-medium) {
+		width: calc((100% - 300px)/2);
+	}
+	@media screen and(max-width: $break-medium) {
+		width: 50%;
+	}
+	@media screen and(max-width: $break-small) {
+		width: 100%;
+	}
+
+	img {
+		max-width: 100%;
+	}
+}
+
+#hours-container {
+	text-align: center;
+	@media screen and(min-width: $break-medium) {
+		width: 280px;
+	}
+	@media screen and(max-width: $break-medium) {
+		width: 50%;
+	}
+	@media screen and(max-width: $break-small) {
+		width: 100%;
+	}
+
+	table {
+		margin: auto;
+
+		caption {
+			font-weight: bold;
+			font-size  : 16px;
 		}
 
-		#reviews-list {
-			background-color: $secondary-light-light;
-			display         : flex;
-			flex-flow       : row wrap;
-			list-style      : outside none none;
-			margin          : 0;
-			padding         : 30px 15px 60px;
+		th {
+			text-align: left;
+		}
+	}
+}
 
-			article {
-				padding         : 15px;
-				background-color: #fff;
-				box-shadow      : 0 2px 5px rgba(0, 0, 0, 0.26);
-				font-family     : Arial, sans-serif;
-				margin          : 15px;
-				text-align      : left;
-				@media screen and(min-width: $break-medium) {
-					width: calc((100% - 180px)/3); //90px = 30 margin*3
-				}
-				@media screen and(max-width: $break-medium) {
-					width: calc((100% - 120px)/2); //60px = 30 margin  *2
-				}
-				@media screen and(max-width: $break-small) {
-					width : 100%;
-					margin: 15px 0;
-				}
+#reviews-section {
+	> h1 {
+		margin        : 20px auto;
+		width         : 30%;
+		text-transform: uppercase;
+		line-height   : 1.1;
+		text-align    : center;
+		font-family   : Arial, sans-serif;
+		border-bottom : 1px solid #d4d4d4;
+	}
 
-				author {
-					display    : block;
-					font-weight: bold;
-					font-size  : 20px;
-					color      : red;
-				}
+	#reviews-list {
+		background-color: $secondary-light-light;
+		display         : flex;
+		flex-flow       : row wrap;
+		list-style      : outside none none;
+		margin          : 0;
+		padding         : 30px 15px 60px;
 
-				time {
-					font-size: 90%;
-					color    : #666;
-				}
+		article {
+			padding         : 15px;
+			background-color: #fff;
+			box-shadow      : 0 2px 5px rgba(0, 0, 0, 0.26);
+			font-family     : Arial, sans-serif;
+			margin          : 15px;
+			text-align      : left;
+			@media screen and(min-width: $break-medium) {
+				width: calc((100% - 180px)/3); //90px = 30 margin*3
+			}
+			@media screen and(max-width: $break-medium) {
+				width: calc((100% - 120px)/2); //60px = 30 margin  *2
+			}
+			@media screen and(max-width: $break-small) {
+				width : 100%;
+				margin: 15px 0;
+			}
 
-				p {
-					text-align: justify;
-				}
+			author {
+				display    : block;
+				font-weight: bold;
+				font-size  : 20px;
+				color      : red;
+			}
+
+			time {
+				font-size: 90%;
+				color    : #666;
+			}
+
+			p {
+				text-align: justify;
 			}
 		}
 	}
