@@ -24,6 +24,9 @@ module.exports = {
 		"semi": [
 			"error",
 			"always"
-		]
+		],
+		"no-fallthrough": ["error", {
+			"commentPattern": "break[\\s\\w]*omitted"
+		}]
 	}
 };

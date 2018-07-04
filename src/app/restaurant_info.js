@@ -6,7 +6,85 @@ var map;
  */
 document.addEventListener(`DOMContentLoaded`, ( /*event*/ ) => {
 	fetchRestaurantFromURL();
+	var writeButton = document.getElementById(`writeReview`);
+	var cancelButton = document.getElementById(`cancel`);
+	var addReviewDialog = document.getElementById(`addReviewDialog`);
+
+	// Update button opens a modal dialog
+	writeButton.addEventListener(`click`, () => addReviewDialog.showModal());
+
+	// Form cancel button closes the dialog box
+	cancelButton.addEventListener(`click`, () => addReviewDialog.close());
+	// Form cancel button closes the dialog box
+	addReviewDialog.addEventListener(`close`, function() {
+		var review = {
+			restaurant_id: self.restaurant.id,
+			name: document.getElementById(`userName`).value,
+			rating: parseInt(document.getElementById(`rating`).value),
+			comments: document.getElementById(`comments`).value,
+		};
+		if (review.name && review.rating && review.comments) {
+			const container = document.getElementById(`reviews-list`);
+			//sendNewReview(review, container);
+
+			review.id = `pending`;
+			review.createdAt = new Date().toISOString();
+			container.appendChild(createReviewHTML(review));
+		}
+	});
 });
+
+function sendNewReview(review, container) {
+	DBHelper.addNewReview(review)
+		.then((savedReview) => {
+			const pendingReview = document.getElementById(`review-pending`);
+			if (pendingReview) container.removeChild(pendingReview);
+			container.appendChild(createReviewHTML(savedReview));
+			showSnackbar(`Review added succesfully!`);
+		})
+		.catch(() => {
+			showSnackbar(`Review couldn't be added. Retrying...`);
+			setTimeout(() => sendNewReview(review, container), 3000);
+		});
+}
+
+function toggleFavorite() {
+	const toggleButton = document.getElementById(`favorite-toggle`);
+	if (self.restaurant.is_favorite == `false`) {
+		toggleButton.innerHTML = `<span title="Remove from favorite restaurants" style="color:yellow;font-size:30px;">⭐</span>`;
+		self.restaurant.is_favorite = `true`;
+	} else {
+		toggleButton.innerHTML = `<span title="Add to favorite restaurants" style="font-size:40px;">☆</span>`;
+		self.restaurant.is_favorite = `false`;
+	}
+	updateFavoriteRestaurant(self.restaurant);
+}
+
+function updateFavoriteRestaurant(restaurant) {
+	DBHelper.toggleFavoriteRestaurant(restaurant)
+		.then((savedRestaurant) => {
+			self.restaurant = savedRestaurant;
+			showSnackbar(`Restaurant ${savedRestaurant.is_favorite ==`true` ? `marked` : `unmarked`} as favorite`);
+		})
+		.catch(() => {
+			showSnackbar(`Changes couldn't be saved. Retrying...`);
+			setTimeout(() => updateFavoriteRestaurant(restaurant), 3000);
+		});
+}
+
+function showSnackbar(text) {
+	// Get the snackbar DIV
+	var x = document.getElementById(`snackbar`);
+
+	// Add the "show" class to DIV
+	x.className = `show`;
+	x.innerHTML = text;
+
+	// After 3 seconds, remove the show class from DIV
+	setTimeout(function() {
+		x.className = x.className.replace(`show`, ``);
+	}, 3000);
+}
 /**
  * Initialize Google map, called from HTML.
  */
@@ -53,6 +131,13 @@ function fetchRestaurantFromURL() {
  * Create restaurant HTML and add it to the webpage
  */
 function fillRestaurantHTML(restaurant = self.restaurant) {
+	let toggleButton;
+	if (self.restaurant.is_favorite == `true`) {
+		toggleButton = `<button id="favorite-toggle" onclick="toggleFavorite()" aria-label="Favorite?"><span title="Remove from favorite restaurants" style="color:yellow;font-size:30px;">⭐</span></button>`;
+	} else {
+		toggleButton = `<button id="favorite-toggle" onclick="toggleFavorite()" aria-label="Favorite?"><span title="Add to favorite restaurants" style="font-size:40px;">☆</span></button>`;
+	}
+
 	const name = document.getElementById(`restaurant-name`);
 	if (name.innerHTML != ``) return;
 	name.innerHTML = restaurant.name;
@@ -64,7 +149,7 @@ function fillRestaurantHTML(restaurant = self.restaurant) {
 	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
 	const imageFileExtension = `jpg`;
 	const imageContainer = document.getElementById(`img-container`);
-	imageContainer.innerHTML = `<picture>
+	imageContainer.innerHTML = `${toggleButton}<picture>
 			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
 					sizes="100vw"></source>
 			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
@@ -80,7 +165,7 @@ function fillRestaurantHTML(restaurant = self.restaurant) {
 		fillRestaurantHoursHTML();
 	}
 	// fill reviews
-	fillReviewsHTML();
+	fillReviewsHTML(restaurant);
 }
 
 /**
@@ -98,16 +183,18 @@ function fillRestaurantHoursHTML(operatingHours = self.restaurant.operating_hour
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-function fillReviewsHTML(reviews = self.restaurant.reviews) {
-	const container = document.getElementById(`reviews-list`);
-	if (!reviews) {
-		const noReviews = document.createElement(`p`);
-		noReviews.innerHTML = `No reviews yet!`;
-		container.appendChild(noReviews);
-		return;
-	}
-	reviews.forEach(review => {
-		container.appendChild(createReviewHTML(review));
+function fillReviewsHTML(restaurant) {
+	DBHelper.fetchReviews(restaurant.id).then(reviews => {
+		const container = document.getElementById(`reviews-list`);
+		if (!reviews) {
+			const noReviews = document.createElement(`p`);
+			noReviews.innerHTML = `No reviews yet!`;
+			container.appendChild(noReviews);
+			return;
+		}
+		reviews.forEach(review => {
+			container.appendChild(createReviewHTML(review));
+		});
 	});
 	enableLazyLoading();
 }
@@ -117,6 +204,14 @@ function fillReviewsHTML(reviews = self.restaurant.reviews) {
  */
 function createReviewHTML(review) {
 	const article = document.createElement(`article`);
+	const options = {
+		day: `2-digit`,
+		//weekday: `long`,
+		year: `2-digit`,
+		month: `2-digit`,
+	};
+	review.date = review.updatedAt ? new Date(review.updatedAt).toLocaleString(`es-es`, options) : `Now`;
+	article.id = `review-${review.id}`;
 	article.innerHTML = `
 		<author>${review.name}</author>
 		<time datetime="${review.date}">${review.date}</time>

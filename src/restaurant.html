@@ -25,12 +25,14 @@
 			</nav>
 		</header>
 		<main>
-			<article id="restaurant-container">
-				<header>
+			<article>
+				<header class="restaurant-header">
+					<div class="btn-group">
+					</div>
 					<h1 id="restaurant-name"></h1>
 					<h2><i class="material-icons" aria-label="Cuisine Type">restaurant</i> <span id="restaurant-cuisine"></span></h2>
 				</header>
-				<section id="restaurant-details">
+				<section class="restaurant-details">
 					<div id="img-container">
 					</div>
 					<div id="hours-container">
@@ -48,7 +50,12 @@
 					</figure>
 				</section>
 				<section id="reviews-section">
-					<h1>Reviews</h1>
+
+					<h1>Reviews
+						<button id="writeReview" class="btn btn-primary" title="Write your review">
+							<i class="material-icons" aria-label="Write your review">&#xe560;</i>
+						</button>
+					</h1>
 					<div id="reviews-list"></div>
 				</section>
 			</article>
@@ -58,6 +65,44 @@
 				<a class="back-top" href="#top">Back to top</a>
 			</footer>
 		</main>
+		<div id="snackbar">Some text some message..</div>
+
+		<dialog id="addReviewDialog" class="dialog" aria-hidden="true" role="dialog" aria-labelledby="dialogTitle">
+			<header>
+				<div class="btn-group">
+					<button id="cancel" type="reset">
+						<i class="material-icons" aria-label="Close">cancel</i>
+					</button>
+				</div>
+				<h1>Share your experience!</h1>
+			</header>
+			<form method="dialog" id="dialogForm">
+				<section>
+					<fieldset class="dialog-input">
+						<label for="userName">Your name</label>
+						<input type="text" name="userName" id="userName" required/>
+					</fieldset>
+					<fieldset class="dialog-input">
+						<label for="rating">Rating</label>
+						<select id="rating" name="rating" required>
+							<option selected disabled>Rate your experience</option>
+							<option value="1">❤♡♡♡♡</option>
+							<option value="2">❤❤♡♡♡</option>
+							<option value="3">❤❤❤♡♡</option>
+							<option value="4">❤❤❤❤♡</option>
+							<option value="5">❤❤❤❤❤</option>
+						</select>
+					</fieldset>
+					<fieldset class="dialog-input">
+						<label for="comments">Your Review</label>
+						<textarea id="comments" name="comments" required rows="3"></textarea>
+					</fieldset>
+				</section>
+				<menu>
+					<button type="submit" class="btn btn-primary">Send your review</button>
+				</menu>
+			</form>
+		</dialog>
 
 		<script charset="utf-8" src="app/dbhelper.js"></script>
 		<script charset="utf-8" src="app/idb.js"></script>

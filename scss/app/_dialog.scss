@@ -1,0 +1,92 @@
+dialog {
+	padding   : 0;
+	border    : 0;
+	box-shadow: -6px 4px 10px 5px rgba(70, 63, 63, 0.65);
+
+	&::backdrop {
+		background: rgba(0,0,0,0.5);
+	}
+
+	header {
+		padding         : 10px;
+		background-color: $secondary-light;
+		box-shadow      : 0 2px 5px rgba(0, 0, 0, 0.26);
+		text-align      : center;
+		line-height     : 2;
+		margin          : 0 0 20px;
+	}
+
+	section {
+		padding: 10px;
+	}
+
+	menu {
+		padding   : 0;
+		text-align: center;
+	}
+}
+
+fieldset {
+	border: 0;
+}
+
+.btn-group {
+	align-self     : flex-start;
+	display        : flex;
+	width          : 100%;
+	justify-content: flex-end;
+
+	button {
+		&:focus {
+			border: 1px $primary solid;
+		}
+		background: 0;
+		border    : 0;
+
+		&:hover {
+			background-color: #fff4;
+			border-radius   : 100%!important;
+		}
+	}
+}
+
+.dialog-input {
+	input,
+	label,
+	select,
+	textarea {
+		display   : block;
+		width     : 100%;
+		text-align: left;
+	}
+
+	label {
+		font-weight: bold;
+	}
+}
+
+.btn {
+	display            : inline-block;
+	padding            : 6px 12px;
+	margin-bottom      : 0;
+	font-size          : 14px;
+	font-weight        : 400;
+	line-height        : 1.42857143;
+	text-align         : center;
+	white-space        : nowrap;
+	vertical-align     : middle;
+	-ms-touch-action   : manipulation;
+	touch-action       : manipulation;
+	cursor             : pointer;
+	-webkit-user-select: none;
+	-moz-user-select   : none;
+	-ms-user-select    : none;
+	user-select        : none;
+	border             : 1px solid transparent;
+	border-radius      : 4px;
+}
+
+.btn-primary {
+	background: $info-dark;
+	color     : #fff;
+}
