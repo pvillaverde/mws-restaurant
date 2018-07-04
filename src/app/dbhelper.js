@@ -72,6 +72,16 @@ class DBHelper {
 				return restaurants;
 			});
 	}
+	static toggleFavoriteRestaurant(restaurant) {
+		return fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurant.id}/?is_favorite=${restaurant.is_favorite}`, {
+				method: `PUT`
+			})
+			.then(response => response.json())
+			.then(restaurant => {
+				DBHelper.addRestaurantsToIndexDB([restaurant]);
+				return restaurant;
+			});
+	}
 
 
 	static addRestaurantsToIndexDB(restaurants) {
@@ -112,6 +122,17 @@ class DBHelper {
 			.then(reviews => {
 				DBHelper.addReviewsToIndexDB(reviews);
 				return reviews;
+			});
+	}
+	static addNewReview(review) {
+		return fetch(`${DBHelper.DATABASE_URL}/reviews`, {
+				method: `POST`,
+				body: JSON.stringify(review)
+			})
+			.then(response => response.json())
+			.then(review => {
+				DBHelper.addReviewsToIndexDB([review]);
+				return review;
 			});
 	}
 	static addReviewsToIndexDB(reviews) {

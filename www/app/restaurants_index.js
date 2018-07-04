@@ -141,6 +141,7 @@ function fillRestaurantsHTML(restaurants = self.restaurants) {
  * Create restaurant HTML.
  */
 function createRestaurantHTML(restaurant) {
+	const is_favorite = restaurant.is_favorite == `true` ? `<span title="Favorite" style="position:absolute;color:yellow;font-size:30px;">⭐ </span>` : ``;
 	//restaurant.rating = getRestaurantRating(restaurant);
 	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, ``);
 	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
@@ -148,7 +149,7 @@ function createRestaurantHTML(restaurant) {
 	const li = document.createElement(`li`);
 	li.innerHTML = `
 	<a href="${DBHelper.urlForRestaurant(restaurant)}" aria-label="${restaurant.name}">
-		<figure>
+		<figure>${is_favorite}
 			<picture>
 				<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
 						sizes="100vw"></source>
