@@ -144,20 +144,18 @@ function createRestaurantHTML(restaurant) {
 	const is_favorite = restaurant.is_favorite == `true` ? `<span title="Favorite" style="position:absolute;color:yellow;font-size:30px;">⭐ </span>` : ``;
 	//restaurant.rating = getRestaurantRating(restaurant);
 	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, ``);
-	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
-	const imageFileExtension = `jpg`;
 	const li = document.createElement(`li`);
 	li.innerHTML = `
 	<a href="${DBHelper.urlForRestaurant(restaurant)}" aria-label="${restaurant.name}">
 		<figure>${is_favorite}
 			<picture>
-				<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
-						sizes="100vw"></source>
-				<source class="lazy"  media="(max-width: 960px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
-						sizes="50vw"></source>
-				<source class="lazy"  media="(min-width: 960px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
-						sizes="360px"></source>
-				<img class="lazy" src="placeholder-image.jpg" data-src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
+				<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="100vw"></source>
+				<source class="lazy"  media="(max-width: 960px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="50vw"></source>
+				<source class="lazy"  media="(min-width: 960px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="360px"></source>
+				<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w" sizes="100vw"></source>
+				<source class="lazy"  media="(max-width: 960px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w"	sizes="50vw"></source>
+				<source class="lazy"  media="(min-width: 960px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w"	sizes="360px"></source>
+				<img class="lazy" src="assets/img/placeholder-image-400.webp" data-src="${imageFileName}-800.jpg" alt="${restaurant.name}'s restaurant photo">
 			</picture>
 			<figcaption>
 				<h1>${restaurant.name} <span class="pull-right rating"><i class="material-icons" aria-label="Average rating">favorite</i>${restaurant.rating}</span></h1>
@@ -176,7 +174,7 @@ function createRestaurantHTML(restaurant) {
  */
 function getRestaurantRating(restaurant) {
 	return DBHelper.fetchReviews(restaurant.id).then(reviews => {
-		var sum = reviews.reduce((total, review) => total + review.rating, 0) * 10;
+		var sum = reviews.reduce((total, review) => total + parseInt(review.rating), 0) * 10;
 		return Math.round(sum / reviews.length, 1) / 10;
 	});
 }

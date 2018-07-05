@@ -1,4 +1,4 @@
-const staticCacheName = `restaurants-static-v28`;
+const staticCacheName = `restaurants-static-v35`;
 const contentImgsCache = `restaurants-content-imgs`;
 const allCaches = [staticCacheName, contentImgsCache];
 
@@ -8,6 +8,7 @@ console.log(`Started Service Worker: %s`, staticCacheName);
 self.addEventListener(`install`, (event) => {
 	const urlsToCache = [
 		`/`,
+		`/index.html`,
 		`/restaurant.html`,
 		`/app/dbhelper.js`,
 		`/app/main.js`,

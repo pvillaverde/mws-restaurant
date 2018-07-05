@@ -25,7 +25,7 @@ document.addEventListener(`DOMContentLoaded`, ( /*event*/ ) => {
 		};
 		if (review.name && review.rating && review.comments) {
 			const container = document.getElementById(`reviews-list`);
-			//sendNewReview(review, container);
+			sendNewReview(review, container);
 
 			review.id = `pending`;
 			review.createdAt = new Date().toISOString();
@@ -50,7 +50,7 @@ function sendNewReview(review, container) {
 
 function toggleFavorite() {
 	const toggleButton = document.getElementById(`favorite-toggle`);
-	if (self.restaurant.is_favorite == `false`) {
+	if (!self.restaurant.is_favorite || self.restaurant.is_favorite == `false`) {
 		toggleButton.innerHTML = `<span title="Remove from favorite restaurants" style="color:yellow;font-size:30px;">⭐</span>`;
 		self.restaurant.is_favorite = `true`;
 	} else {
@@ -147,14 +147,13 @@ function fillRestaurantHTML(restaurant = self.restaurant) {
 
 	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, ``);
 	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
-	const imageFileExtension = `jpg`;
 	const imageContainer = document.getElementById(`img-container`);
 	imageContainer.innerHTML = `${toggleButton}<picture>
-			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
-					sizes="100vw"></source>
-			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.${imageFileExtension} 400w, ${imageFileName}-800.${imageFileExtension} 800w"
-					sizes="50vw"></source>
-			<img class="lazy" src="placeholder-image.jpg" data-src="${imageFileName}-800.${imageFileExtension}" alt="${restaurant.name}'s restaurant photo">
+			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="100vw"></source>
+			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="50vw"></source>
+			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w" sizes="100vw"></source>
+			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w" sizes="50vw"></source>
+			<img class="lazy" src="assets/img/placeholder-image-800.webp" data-src="${imageFileName}-800.jpg" alt="${restaurant.name}'s restaurant photo">
 		</picture>`;
 
 	const cuisine = document.getElementById(`restaurant-cuisine`);
@@ -220,16 +219,6 @@ function createReviewHTML(review) {
 		<p>${review.comments}</p>`;
 	return article;
 }
-
-/**
- * Add restaurant name to the breadcrumb navigation menu
- */
-/*fillBreadcrumb = (restaurant = self.restaurant) => {
-	const breadcrumb = document.getElementById('breadcrumb');
-	const li = document.createElement('li');
-	li.innerHTML = restaurant.name;
-	breadcrumb.appendChild(li);
-}*/
 
 /**
  * Get a parameter by name from page URL.

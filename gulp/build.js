@@ -26,14 +26,14 @@ gulp.task(`copy-scripts`, () => {
 });
 gulp.task(`build-scripts`, () => {
 	return gulp.src([`${conf.paths.src}/app/**/*.js`])
-		.pipe($.sourcemaps.init())
+		//	.pipe($.sourcemaps.init())
 		.pipe($.babel({
 			presets: [`env`],
 			/*plugins: [`es6-promise`]*/
 		}))
 		/*.pipe($.concat(`main.js`))*/
 		.pipe($.uglify().on(`error`, conf.errorHandler))
-		.pipe($.sourcemaps.write())
+		//	.pipe($.sourcemaps.write())
 		.pipe(gulp.dest(`${conf.paths.dest}/app/`));
 });
 
