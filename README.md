@@ -15,18 +15,13 @@ npm install
 ```
 
 ### Running
-Run gulp. It's default task will create www folder with  production resources
-
-```sh
-gulp
-```
-
 Run server with npm's http-server. I've had some issues with SimpleHTTPServer and fetch API.
 - -p 8000 is port 8000(just as SimpleHTTPServer)
 - -g to serve gziped js, css, html
 ```sh
 http-server -p 8000 -g
 ```
+- Important:  You must be at www folder
 
 ## Built With
 
