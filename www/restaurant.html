@@ -43,10 +43,11 @@
 					</div>
 					<figure>
 						<figcaption>
-							<address id="restaurant-address"></address>
+
+							<button id="viewMap" class="btn btn-xs btn-secondary" title="View in map">
+								<address id="restaurant-address"></address> <i class="material-icons" aria-label="View in map">&#xe0c8;</i>
+							</button>
 						</figcaption>
-						<a class="skip-map" href="#reviews-section">Skip map and go to reviews</a>
-						<div id="map" role="application"></div>
 					</figure>
 				</section>
 				<section id="reviews-section">
@@ -66,15 +67,27 @@
 			</footer>
 		</main>
 		<div id="snackbar">Some text some message..</div>
-
-		<dialog id="addReviewDialog" class="dialog" aria-hidden="true" role="dialog" aria-labelledby="dialogTitle">
+		<dialog id="mapDialog" class="dialog" aria-hidden="true" role="dialog" aria-label="map">
+			<header>
+				<div class="btn-group">
+					<button id="cancelMap" type="reset">
+						<i class="material-icons" aria-label="Close">cancel</i>
+					</button>
+				</div>
+				<h1>Map</h1>
+			</header>
+			<section>
+				<div id="map" role="application"></div>
+			</section>
+		</dialog>
+		<dialog id="addReviewDialog" class="dialog" aria-hidden="true" role="dialog" aria-labelledby="addReviewDialog-title">
 			<header>
 				<div class="btn-group">
 					<button id="cancel" type="reset">
 						<i class="material-icons" aria-label="Close">cancel</i>
 					</button>
 				</div>
-				<h1>Share your experience!</h1>
+				<h1 id="addReviewDialog-title">Share your experience!</h1>
 			</header>
 			<form method="dialog" id="dialogForm">
 				<section>
@@ -108,7 +121,7 @@
 		<script charset="utf-8" src="app/idb.js"></script>
 		<script charset="utf-8" src="app/main.js"></script>
 		<script charset="utf-8" src="app/restaurant_info.js"></script>
-		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnpXTRc4VnjfrA6lesKaIJuYLsa_UcJpo&libraries=places&callback=initMap"></script>
+		<!--<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnpXTRc4VnjfrA6lesKaIJuYLsa_UcJpo&libraries=places&callback=initMap"></script>-->
 	</body>
 
 </html>

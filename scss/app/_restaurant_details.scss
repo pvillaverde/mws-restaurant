@@ -28,20 +28,11 @@
 	}
 
 	figure {
-		position: relative;
-		padding : 10px;
-		@media screen and(min-width: $break-medium) {
-			width : calc((100% - 300px)/2);
-			margin: 0;
-
-			#map {
-				height: 300px;
-			}
+		address {
+			display: inline-block;
 		}
-		@media screen and(max-width: $break-medium) {
-			width : 100%;
-			margin: 20px auto 0;
-		}
+		width : 100%;
+		margin: 20px auto 0;
 
 		figcaption {
 			text-align: center;
@@ -50,10 +41,7 @@
 }
 
 #img-container {
-	@media screen and(min-width: $break-medium) {
-		width: calc((100% - 300px)/2);
-	}
-	@media screen and(max-width: $break-medium) {
+	@media screen and(min-width: $break-small) {
 		width: 50%;
 	}
 	@media screen and(max-width: $break-small) {
@@ -67,10 +55,7 @@
 
 #hours-container {
 	text-align: center;
-	@media screen and(min-width: $break-medium) {
-		width: 280px;
-	}
-	@media screen and(max-width: $break-medium) {
+	@media screen and(min-width: $break-small) {
 		width: 50%;
 	}
 	@media screen and(max-width: $break-small) {
@@ -151,7 +136,7 @@
 	width     : 50px;
 	height    : 50px;
 	border    : 0;
-	background: 0;
+	background: #fff5!important;
 	position  : absolute;
 
 	&:focus {
@@ -161,8 +146,7 @@
 	border    : 0;
 
 	&:hover {
-		background-color: #fff4;
-		border-radius   : 100%!important;
+		background-color: #fff9!important;
 	}
 }
 

@@ -9,12 +9,20 @@ document.addEventListener(`DOMContentLoaded`, ( /*event*/ ) => {
 	var writeButton = document.getElementById(`writeReview`);
 	var cancelButton = document.getElementById(`cancel`);
 	var addReviewDialog = document.getElementById(`addReviewDialog`);
+	var mapDialog = document.getElementById(`mapDialog`);
+	var viewMap = document.getElementById(`viewMap`);
+	var cancelMap = document.getElementById(`cancelMap`);
 
 	// Update button opens a modal dialog
 	writeButton.addEventListener(`click`, () => addReviewDialog.showModal());
+	viewMap.addEventListener(`click`, () => {
+		mapDialog.showModal();
+		toggleMap();
+	});
 
 	// Form cancel button closes the dialog box
 	cancelButton.addEventListener(`click`, () => addReviewDialog.close());
+	cancelMap.addEventListener(`click`, () => mapDialog.close());
 	// Form cancel button closes the dialog box
 	addReviewDialog.addEventListener(`close`, function() {
 		var review = {
@@ -85,25 +93,34 @@ function showSnackbar(text) {
 		x.className = x.className.replace(`show`, ``);
 	}, 3000);
 }
-/**
- * Initialize Google map, called from HTML.
- */
+
+function toggleMap() {
+	const mapScript = document.getElementById(`map-script`);
+	if (mapScript) {
+		window.initMap();
+	} else {
+		const gMapsScript = document.createElement(`script`);
+		gMapsScript.id = `map-script`;
+		gMapsScript.setAttribute(`src`, `https://maps.googleapis.com/maps/api/js?v=3.30&key=AIzaSyBnpXTRc4VnjfrA6lesKaIJuYLsa_UcJpo&libraries=places&callback=initMap`);
+		document.head.appendChild(gMapsScript);
+		//window.initMap();
+	}
+}
 window.initMap = () => {
-	fetchRestaurantFromURL().then((restaurant) => {
-		self.map = new google.maps.Map(document.getElementById(`map`), {
-			zoom: 16,
-			center: restaurant.latlng,
-			scrollwheel: false
+	const mapElement = document.getElementById(`map`);
+	self.map = new google.maps.Map(mapElement, {
+		zoom: 16,
+		center: self.restaurant.latlng,
+		scrollwheel: false
+	});
+	DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+	/* Set alt attributes on maps images so they dont get readed by screenReaders */
+	google.maps.event.addListener(self.map, `tilesloaded`, function(evt) {
+		var noAltImages = [].slice.call(document.querySelectorAll(`img:not([alt])`));
+		noAltImages.forEach(img => {
+			if (!img.alt) img.alt = ``;
 		});
-		DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-		/* Set alt attributes on maps images so they dont get readed by screenReaders */
-		google.maps.event.addListener(self.map, `tilesloaded`, function(evt) {
-			var noAltImages = [].slice.call(document.querySelectorAll(`img:not([alt])`));
-			noAltImages.forEach(img => {
-				if (!img.alt) img.alt = ``;
-			});
-		});
-	}).catch((error) => console.error(error));
+	});
 };
 
 /**
@@ -121,6 +138,7 @@ function fetchRestaurantFromURL() {
 				self.restaurant = restaurant;
 				fillRestaurantHTML();
 				resolve(restaurant);
+				//	setTimeout(() => toggleMap(), 3000);
 			}).catch((error) => reject(error));
 		}
 	});
@@ -149,10 +167,10 @@ function fillRestaurantHTML(restaurant = self.restaurant) {
 	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
 	const imageContainer = document.getElementById(`img-container`);
 	imageContainer.innerHTML = `${toggleButton}<picture>
-			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="100vw"></source>
-			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="50vw"></source>
-			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w" sizes="100vw"></source>
-			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w" sizes="50vw"></source>
+			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="100vw" type="image/webp"></source>
+			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="50vw" type="image/webp"></source>
+			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w" sizes="100vw" type="image/jpeg"></source>
+			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w" sizes="50vw" type="image/jpeg"></source>
 			<img class="lazy" src="assets/img/placeholder-image-800.webp" data-src="${imageFileName}-800.jpg" alt="${restaurant.name}'s restaurant photo">
 		</picture>`;
 
@@ -235,9 +253,7 @@ function getParameterByName(name, url) {
 		return ``;
 	return decodeURIComponent(results[2].replace(/\+/g, ` `));
 }
-/**
- * Add markers for current restaurants to the map.
- */
+
 function enableLazyLoading() {
 	var lazyImages = [].slice.call(document.querySelectorAll(`.lazy`));
 	if (`IntersectionObserver` in window) {
@@ -245,8 +261,8 @@ function enableLazyLoading() {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
 					let lazyImage = entry.target;
-					lazyImage.src = lazyImage.dataset.src;
-					lazyImage.srcset = lazyImage.dataset.srcset;
+					if (lazyImage.dataset.src) lazyImage.src = lazyImage.dataset.src;
+					if (lazyImage.dataset.srcset) lazyImage.srcset = lazyImage.dataset.srcset;
 					lazyImage.classList.remove(`lazy`);
 					lazyImageObserver.unobserve(lazyImage);
 				}

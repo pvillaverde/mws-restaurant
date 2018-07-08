@@ -6,8 +6,12 @@ const gulp = require(`gulp`),
 		pattern: [`gulp-*`, `del`]
 	});
 
-gulp.task(`build`, [ /*`lint`,*/ `copy-default`, `build-scripts`, `sass`, `images`], () => {
-
+gulp.task(`build`, [`clean`, ], (finish) => {
+	return $.sequence(`copy-default`, `build-scripts`, `sass`, `images`)(() => {
+		console.log(`#################################################`);
+		console.log(`Build finished. Run "http-server -p 8000 -c-1 -g" on www folder`);
+		finish();
+	});
 });
 
 gulp.task(`copy-default`, () => {

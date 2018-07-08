@@ -64,18 +64,38 @@ function fillCuisinesHTML(cuisines = self.cuisines) {
 /**
  * Initialize Google map, called from HTML.
  */
+function toggleMap() {
+	const mapElement = document.getElementById(`map`);
+	const mapScript = document.getElementById(`map-script`);
+	if (mapElement.style.display == ``) {
+		mapElement.style.display = `none`;
+		//		mapElement.display == `none`;
+	} else if (mapScript) {
+		window.initMap();
+	} else {
+		const gMapsScript = document.createElement(`script`);
+		gMapsScript.id = `map-script`;
+		gMapsScript.setAttribute(`src`, `https://maps.googleapis.com/maps/api/js?v=3.30&key=AIzaSyBnpXTRc4VnjfrA6lesKaIJuYLsa_UcJpo&libraries=places&callback=initMap`);
+		document.head.appendChild(gMapsScript);
+		//window.initMap();
+	}
+}
 window.initMap = () => {
+
+	const mapElement = document.getElementById(`map`);
+	//mapElement.display = `block`;
+	mapElement.style.display = ``;
 	let loc = {
 		lat: 40.722216,
 		lng: -73.987501
 	};
-	self.map = new google.maps.Map(document.getElementById(`map`), {
+	self.map = new google.maps.Map(mapElement, {
 		zoom: 12,
 		center: loc,
 	});
 	addMarkersToMap();
 	/* Set alt attributes on maps images so they dont get readed by screenReaders */
-	google.maps.event.addListener(self.map, `tilesloaded`, function(evt) {
+	google.maps.event.addListener(self.map, `tilesloaded`, (evt) => {
 		var noAltImages = [].slice.call(document.querySelectorAll(`img:not([alt])`));
 		noAltImages.forEach(img => {
 			if (!img.alt) img.alt = ``;
@@ -131,17 +151,14 @@ function fillRestaurantsHTML(restaurants = self.restaurants) {
 		}));
 		//ul.append(createRestaurantHTML(restaurant));
 	});
-	Promise.all(promises).then(() => {
-		addMarkersToMap();
-		enableLazyLoading();
-	});
+	Promise.all(promises).then(() => enableLazyLoading());
 }
 
 /**
  * Create restaurant HTML.
  */
 function createRestaurantHTML(restaurant) {
-	const is_favorite = restaurant.is_favorite == `true` ? `<span title="Favorite" style="position:absolute;color:yellow;font-size:30px;">⭐ </span>` : ``;
+	const is_favorite = restaurant.is_favorite == `true` ? `<span aria-label="favorite" title="Favorite" style="background:#fff5;position:absolute;color:yellow;font-size:30px;">⭐ </span>` : ``;
 	//restaurant.rating = getRestaurantRating(restaurant);
 	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, ``);
 	const li = document.createElement(`li`);
@@ -149,12 +166,12 @@ function createRestaurantHTML(restaurant) {
 	<a href="${DBHelper.urlForRestaurant(restaurant)}" aria-label="${restaurant.name}">
 		<figure>${is_favorite}
 			<picture>
-				<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="100vw"></source>
-				<source class="lazy"  media="(max-width: 960px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="50vw"></source>
-				<source class="lazy"  media="(min-width: 960px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="360px"></source>
-				<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w" sizes="100vw"></source>
-				<source class="lazy"  media="(max-width: 960px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w"	sizes="50vw"></source>
-				<source class="lazy"  media="(min-width: 960px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w"	sizes="360px"></source>
+				<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="100vw" type="image/webp"></source>
+				<source class="lazy"  media="(max-width: 960px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="50vw" type="image/webp"></source>
+				<source class="lazy"  media="(min-width: 960px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="360px" type="image/webp"></source>
+				<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w" sizes="100vw" type="image/jpeg"></source>
+				<source class="lazy"  media="(max-width: 960px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w"	sizes="50vw" type="image/jpeg"></source>
+				<source class="lazy"  media="(min-width: 960px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w"	sizes="360px" type="image/jpeg"></source>
 				<img class="lazy" src="assets/img/placeholder-image-400.webp" data-src="${imageFileName}-800.jpg" alt="${restaurant.name}'s restaurant photo">
 			</picture>
 			<figcaption>
@@ -203,8 +220,8 @@ function enableLazyLoading() {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
 					let lazyImage = entry.target;
-					lazyImage.src = lazyImage.dataset.src;
-					lazyImage.srcset = lazyImage.dataset.srcset;
+					if (lazyImage.dataset.src) lazyImage.src = lazyImage.dataset.src;
+					if (lazyImage.dataset.srcset) lazyImage.srcset = lazyImage.dataset.srcset;
 					lazyImage.classList.remove(`lazy`);
 					lazyImageObserver.unobserve(lazyImage);
 				}

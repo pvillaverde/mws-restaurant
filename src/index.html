@@ -24,10 +24,10 @@
 				</h1>
 			</nav>
 		</header>
-		<a class="skip-map" href="#restaurants-section">Skip map and go to restaurants</a>
+		<!--<a class="skip-map" href="#restaurants-section">Skip map and go to restaurants</a>-->
 		<main>
 			<aside>
-				<div id="map" role="application"></div>
+				<div id="map" role="application" style="display:none;"></div>
 			</aside>
 			<section id="restaurants-section">
 				<fieldset class="filter-options" aria-label="Filter results">
@@ -38,6 +38,7 @@
 					<select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Select a cuisine type">
   						<option value="all">All Cuisines</option>
   					</select>
+					<button class="btn btn-primary" onclick="toggleMap()">Show / Hide map</button>
 				</fieldset>
 				<ul id="restaurants-list"></ul>
 			</section>
@@ -52,7 +53,7 @@
 		<script charset="utf-8" src="app/idb.js"></script>
 		<script charset="utf-8" src="app/main.js"></script>
 		<script charset="utf-8" src="app/restaurants_index.js"></script>
-		<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.30&key=AIzaSyBnpXTRc4VnjfrA6lesKaIJuYLsa_UcJpo&libraries=places&callback=initMap"></script>
+		<!--<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.30&key=AIzaSyBnpXTRc4VnjfrA6lesKaIJuYLsa_UcJpo&libraries=places&callback=initMap"></script>-->
 	</body>
 
 </html>

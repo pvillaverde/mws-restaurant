@@ -1,14 +1,22 @@
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
+	position        : relative;
 	text-align      : center;
 	padding-top     : 50px;
 	background-color: $secondary-light;
 	border          : 0;
-	padding         : 0;
+	padding         : 20px 0 0;
 	margin          : 0;
 	box-shadow      : 0 4px 8px 0 grey;
 
 	legend {
+		position        : absolute;
+		width           : 200px;
+		top             : -15px;
+		right           : 0;
+		left            : 0;
+		margin          : auto;
+
 		.material-icons {
 			color  : $secondary-dark-dark;
 			padding: 0 5px;
@@ -17,7 +25,6 @@
 		border-radius   : 5px;
 		background-color: $secondary-light-light;
 		font-size       : 1.5em;
-		margin          : 0 20px;
 		line-height     : 1.2;
 	}
 
@@ -25,6 +32,16 @@
 		background-color: $secondary-light-light;
 		border          : 1px solid #fff;
 		font-family     : Arial, sans-serif;
+		height          : 35px;
+		letter-spacing  : 0;
+		margin          : 10px;
+		padding         : 0 10px;
+		width           : 200px;
+	}
+
+	button {
+		background-color: $secondary-dark-dark;
+		border          : 1px solid #secondary;
 		height          : 35px;
 		letter-spacing  : 0;
 		margin          : 10px;

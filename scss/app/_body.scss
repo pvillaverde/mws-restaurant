@@ -9,7 +9,8 @@ body {
 			text-align      : center;
 
 			h1 {
-				margin: auto;
+				margin        : auto;
+				padding-bottom: 20px;
 
 				a {
 					color         : #fff;
@@ -41,7 +42,6 @@ body {
 	}
 }
 /* ====================== Map ====================== */
-
 a.back-top {
 	display: block;
 }
@@ -80,6 +80,7 @@ a.skip-map {
 	background-color: #ccc;
 }
 /* ====================== Helpers ====================== */
+
 .pull-right {
 	float: right;
 }

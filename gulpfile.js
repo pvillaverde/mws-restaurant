@@ -13,4 +13,4 @@ wrench.readdirSyncRecursive(`./gulp`)
 	.map((file) => require(`./gulp/` + file));
 
 
-gulp.task(`default`, [`images`, `sass`]);
+gulp.task(`default`, [`build`]);
