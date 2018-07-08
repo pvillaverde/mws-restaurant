@@ -1,0 +1,33 @@
+{
+	"short_name": "Restaurant Reviews",
+	"name": "Restaurants reviews",
+	"background_color": "#f3f3f3",
+	"theme_color": "#202929",
+	"display": "standalone",
+	"start_url": "index.html",
+	"related_applications": [{
+		"platform": "play",
+		"url": "https://play.google.com/store/apps/details?id=com.udacity.android"
+	}],
+	"icons": [{
+			"src": "assets/icons/launcher-icon-48.png",
+			"type": "image/png",
+			"sizes": "48x48"
+		},
+		{
+			"src": "assets/icons/launcher-icon-96.png",
+			"type": "image/png",
+			"sizes": "96x96"
+		},
+		{
+			"src": "assets/icons/launcher-icon-192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "assets/icons/launcher-icon-512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	]
+}
