@@ -1,1 +1,297 @@
-"use strict";var map,restaurant=void 0;function sendNewReview(e,a){DBHelper.addNewReview(e).then(function(e){var t=document.getElementById("review-pending");t&&a.removeChild(t),a.appendChild(createReviewHTML(e)),showSnackbar("Review added succesfully!")}).catch(function(){showSnackbar("Review couldn't be added. Retrying..."),setTimeout(function(){return sendNewReview(e,a)},3e3)})}function toggleFavorite(){var e=document.getElementById("favorite-toggle");self.restaurant.is_favorite&&"false"!=self.restaurant.is_favorite?(e.innerHTML='<span title="Add to favorite restaurants" style="font-size:40px;">☆</span>',self.restaurant.is_favorite="false"):(e.innerHTML='<span title="Remove from favorite restaurants" style="color:yellow;font-size:30px;">⭐</span>',self.restaurant.is_favorite="true"),updateFavoriteRestaurant(self.restaurant)}function updateFavoriteRestaurant(e){DBHelper.toggleFavoriteRestaurant(e).then(function(e){showSnackbar("Restaurant "+("true"==(self.restaurant=e).is_favorite?"marked":"unmarked")+" as favorite")}).catch(function(){showSnackbar("Changes couldn't be saved. Retrying..."),setTimeout(function(){return updateFavoriteRestaurant(e)},3e3)})}function showSnackbar(e){var t=document.getElementById("snackbar");t.className="show",t.innerHTML=e,setTimeout(function(){t.className=t.className.replace("show","")},3e3)}function toggleMap(){if(document.getElementById("map-script"))window.initMap();else{var e=document.createElement("script");e.id="map-script",e.setAttribute("src","https://maps.googleapis.com/maps/api/js?v=3.30&key=AIzaSyBnpXTRc4VnjfrA6lesKaIJuYLsa_UcJpo&libraries=places&callback=initMap"),document.head.appendChild(e)}}function fetchRestaurantFromURL(){var e=getParameterByName("id");return new Promise(function(t,a){self.restaurant?t(self.restaurant):e?DBHelper.fetchRestaurantById(e).then(function(e){self.restaurant=e,fillRestaurantHTML(),t(e)}).catch(function(e){return a(e)}):a("No restaurant id in URL")})}function fillRestaurantHTML(){var e=0<arguments.length&&void 0!==arguments[0]?arguments[0]:self.restaurant,t=void 0;t="true"==self.restaurant.is_favorite?'<button id="favorite-toggle" onclick="toggleFavorite()" aria-label="Favorite?"><span title="Remove from favorite restaurants" style="color:yellow;font-size:30px;">⭐</span></button>':'<button id="favorite-toggle" onclick="toggleFavorite()" aria-label="Favorite?"><span title="Add to favorite restaurants" style="font-size:40px;">☆</span></button>';var a=document.getElementById("restaurant-name");if(""==a.innerHTML){a.innerHTML=e.name,document.getElementById("restaurant-address").innerHTML=e.address;var n=DBHelper.imageUrlForRestaurant(e).replace(/\.[^/.]+$/,"");document.getElementById("img-container").innerHTML=t+'<picture>\n\t\t\t<source class="lazy"  media="(max-width: 600px)"  data-srcset="'+n+"-400.webp 400w, "+n+'-800.webp 800w" sizes="100vw" type="image/webp"></source>\n\t\t\t<source class="lazy"  media="(min-width: 600px)"  data-srcset="'+n+"-400.webp 400w, "+n+'-800.webp 800w" sizes="50vw" type="image/webp"></source>\n\t\t\t<source class="lazy"  media="(max-width: 600px)"  data-srcset="'+n+"-400.jpg 400w, "+n+'-800.jpg 800w" sizes="100vw" type="image/jpeg"></source>\n\t\t\t<source class="lazy"  media="(min-width: 600px)"  data-srcset="'+n+"-400.jpg 400w, "+n+'-800.jpg 800w" sizes="50vw" type="image/jpeg"></source>\n\t\t\t<img class="lazy" src="assets/img/placeholder-image-800.webp" data-src="'+n+'-800.jpg" alt="'+e.name+"'s restaurant photo\">\n\t\t</picture>",document.getElementById("restaurant-cuisine").innerHTML=e.cuisine_type,e.operating_hours&&fillRestaurantHoursHTML(),fillReviewsHTML(e)}}function fillRestaurantHoursHTML(){var e=0<arguments.length&&void 0!==arguments[0]?arguments[0]:self.restaurant.operating_hours,t=document.getElementById("restaurant-hours");for(var a in e){var n=document.createElement("tr");n.innerHTML='<th scope="row">'+a+"</th><td>"+e[a].replace(/,/g,"<br>")+"</td>",t.appendChild(n)}}function fillReviewsHTML(e){DBHelper.fetchReviews(e.id).then(function(e){var t=document.getElementById("reviews-list");if(!e){var a=document.createElement("p");return a.innerHTML="No reviews yet!",void t.appendChild(a)}e.forEach(function(e){t.appendChild(createReviewHTML(e))})}),enableLazyLoading()}function createReviewHTML(e){var t=document.createElement("article");return e.date=e.updatedAt?new Date(e.updatedAt).toLocaleString("es-es",{day:"2-digit",year:"2-digit",month:"2-digit"}):"Now",t.id="review-"+e.id,t.innerHTML="\n\t\t<author>"+e.name+'</author>\n\t\t<time datetime="'+e.date+'">'+e.date+'</time>\n\t\t<meter class="meter-5-hearth" max="5" value="'+e.rating+'"></meter>\n\t\t<span role="presentation" aria-label="Rating '+e.rating+' out of 5" data-value="'+e.rating+'"></span>\n\t\t<p>'+e.comments+"</p>",t}function getParameterByName(e,t){t||(t=window.location.href),e=e.replace(/[[]]/g,"\\$&");var a=new RegExp("[?&]"+e+"(=([^&#]*)|&|#|$)").exec(t);return a?a[2]?decodeURIComponent(a[2].replace(/\+/g," ")):"":null}function enableLazyLoading(){var e=[].slice.call(document.querySelectorAll(".lazy"));if("IntersectionObserver"in window){var a=new IntersectionObserver(function(e,t){e.forEach(function(e){if(e.isIntersecting){var t=e.target;t.dataset.src&&(t.src=t.dataset.src),t.dataset.srcset&&(t.srcset=t.dataset.srcset),t.classList.remove("lazy"),a.unobserve(t)}})});e.forEach(function(e){return a.observe(e)})}}document.addEventListener("DOMContentLoaded",function(){fetchRestaurantFromURL();var e=document.getElementById("writeReview"),t=document.getElementById("cancel"),a=document.getElementById("addReviewDialog"),n=document.getElementById("mapDialog"),r=document.getElementById("viewMap"),i=document.getElementById("cancelMap");e.addEventListener("click",function(){return a.showModal()}),r.addEventListener("click",function(){n.showModal(),toggleMap()}),t.addEventListener("click",function(){return a.close()}),i.addEventListener("click",function(){return n.close()}),a.addEventListener("close",function(){var e={restaurant_id:self.restaurant.id,name:document.getElementById("userName").value,rating:parseInt(document.getElementById("rating").value),comments:document.getElementById("comments").value};if(e.name&&e.rating&&e.comments){var t=document.getElementById("reviews-list");sendNewReview(e,t),e.id="pending",e.createdAt=(new Date).toISOString(),t.appendChild(createReviewHTML(e))}})}),window.initMap=function(){var e=document.getElementById("map");self.map=new google.maps.Map(e,{zoom:16,center:self.restaurant.latlng,scrollwheel:!1}),DBHelper.mapMarkerForRestaurant(self.restaurant,self.map),google.maps.event.addListener(self.map,"tilesloaded",function(e){[].slice.call(document.querySelectorAll("img:not([alt])")).forEach(function(e){e.alt||(e.alt="")})})};
+let restaurant;
+var map;
+const syncStore = {};
+
+/**
+ * Fetch neighborhoods and cuisines as soon as the page is loaded.
+ */
+document.addEventListener(`DOMContentLoaded`, ( /*event*/ ) => {
+	fetchRestaurantFromURL();
+	var writeButton = document.getElementById(`writeReview`);
+	var cancelButton = document.getElementById(`cancel`);
+	var addReviewDialog = document.getElementById(`addReviewDialog`);
+	var mapDialog = document.getElementById(`mapDialog`);
+	var viewMap = document.getElementById(`viewMap`);
+	var cancelMap = document.getElementById(`cancelMap`);
+
+	// Update button opens a modal dialog
+	writeButton.addEventListener(`click`, () => addReviewDialog.showModal());
+	viewMap.addEventListener(`click`, () => {
+		mapDialog.showModal();
+		toggleMap();
+	});
+
+	// Form cancel button closes the dialog box
+	cancelButton.addEventListener(`click`, () => addReviewDialog.close());
+	cancelMap.addEventListener(`click`, () => mapDialog.close());
+	// Form cancel button closes the dialog box
+	addReviewDialog.addEventListener(`close`, function() {
+		var review = {
+			restaurant_id: self.restaurant.id,
+			name: document.getElementById(`userName`).value,
+			rating: parseInt(document.getElementById(`rating`).value),
+			comments: document.getElementById(`comments`).value,
+		};
+		if (review.name && review.rating && review.comments) {
+			const container = document.getElementById(`reviews-list`);
+			sendNewReview(review, container);
+
+			review.id = `pending`;
+			review.createdAt = new Date().toISOString();
+			container.appendChild(createReviewHTML(review));
+		}
+	});
+	if (navigator.serviceWorker) {
+		navigator.serviceWorker.addEventListener(`message`, message => {
+			if (message.data.action === `sync`) {
+				const syncObject = syncStore[message.data.tag];
+				delete syncStore[message.data.tag];
+				syncObject.callback(...syncObject.params);
+			}
+		});
+	}
+});
+
+/**
+ * Ask for a sync event
+ */
+function sendSyncRequest(tag, callback, ...params) {
+	showSnackbar(`Changes couldn't be saved. Retrying...`);
+	if (navigator.serviceWorker) {
+		const id = DBHelper.uuid();
+		syncStore[id] = {
+			'callback': callback,
+			'params': params
+		};
+		navigator.serviceWorker.ready
+			.then(reg => reg.sync.register(id));
+	} else {
+		setTimeout(() => callback(...params), 3000);
+	}
+}
+
+function sendNewReview(review, container) {
+	DBHelper.addNewReview(review)
+		.then((savedReview) => {
+			const pendingReview = document.getElementById(`review-pending`);
+			if (pendingReview) container.removeChild(pendingReview);
+			container.appendChild(createReviewHTML(savedReview));
+			showSnackbar(`Review added succesfully!`);
+		})
+		.catch(() => sendSyncRequest(`addReview`, review, container));
+}
+
+function toggleFavorite() {
+	const toggleButton = document.getElementById(`favorite-toggle`);
+	if (!self.restaurant.is_favorite || self.restaurant.is_favorite == `false`) {
+		toggleButton.innerHTML = `<span title="Remove from favorite restaurants" style="color:yellow;font-size:30px;">⭐</span>`;
+		self.restaurant.is_favorite = `true`;
+	} else {
+		toggleButton.innerHTML = `<span title="Add to favorite restaurants" style="font-size:40px;">☆</span>`;
+		self.restaurant.is_favorite = `false`;
+	}
+	updateFavoriteRestaurant(self.restaurant);
+}
+
+function updateFavoriteRestaurant(restaurant) {
+	DBHelper.toggleFavoriteRestaurant(restaurant)
+		.then((savedRestaurant) => {
+			self.restaurant = savedRestaurant;
+			showSnackbar(`Restaurant ${savedRestaurant.is_favorite ==`true` ? `marked` : `unmarked`} as favorite`);
+		})
+		.catch(() => sendSyncRequest(`updateFavorite`, updateFavoriteRestaurant, restaurant));
+}
+
+function showSnackbar(text) {
+	// Get the snackbar DIV
+	var x = document.getElementById(`snackbar`);
+
+	// Add the "show" class to DIV
+	x.className = `show`;
+	x.innerHTML = text;
+
+	// After 3 seconds, remove the show class from DIV
+	setTimeout(function() {
+		x.className = x.className.replace(`show`, ``);
+	}, 3000);
+}
+
+function toggleMap() {
+	const mapScript = document.getElementById(`map-script`);
+	if (mapScript) {
+		window.initMap();
+	} else {
+		const gMapsScript = document.createElement(`script`);
+		gMapsScript.id = `map-script`;
+		gMapsScript.setAttribute(`src`, `https://maps.googleapis.com/maps/api/js?v=3.30&key=AIzaSyBnpXTRc4VnjfrA6lesKaIJuYLsa_UcJpo&libraries=places&callback=initMap`);
+		document.head.appendChild(gMapsScript);
+		//window.initMap();
+	}
+}
+window.initMap = () => {
+	const mapElement = document.getElementById(`map`);
+	self.map = new google.maps.Map(mapElement, {
+		zoom: 16,
+		center: self.restaurant.latlng,
+		scrollwheel: false
+	});
+	DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+	/* Set alt attributes on maps images so they dont get readed by screenReaders */
+	google.maps.event.addListener(self.map, `tilesloaded`, function(evt) {
+		var noAltImages = [].slice.call(document.querySelectorAll(`img:not([alt])`));
+		noAltImages.forEach(img => {
+			if (!img.alt) img.alt = ``;
+		});
+	});
+};
+
+/**
+ * Get current restaurant from page URL.
+ */
+function fetchRestaurantFromURL() {
+	const id = getParameterByName(`id`);
+	const promise = new Promise((resolve, reject) => {
+		if (self.restaurant) { // restaurant already fetched!
+			resolve(self.restaurant);
+		} else if (!id) {
+			reject(`No restaurant id in URL`);
+		} else {
+			DBHelper.fetchRestaurantById(id).then((restaurant) => {
+				self.restaurant = restaurant;
+				fillRestaurantHTML();
+				resolve(restaurant);
+				//	setTimeout(() => toggleMap(), 3000);
+			}).catch((error) => reject(error));
+		}
+	});
+	return promise;
+}
+
+/**
+ * Create restaurant HTML and add it to the webpage
+ */
+function fillRestaurantHTML(restaurant = self.restaurant) {
+	let toggleButton;
+	if (self.restaurant.is_favorite == `true`) {
+		toggleButton = `<button id="favorite-toggle" onclick="toggleFavorite()" aria-label="Favorite?"><span title="Remove from favorite restaurants" style="color:yellow;font-size:30px;">⭐</span></button>`;
+	} else {
+		toggleButton = `<button id="favorite-toggle" onclick="toggleFavorite()" aria-label="Favorite?"><span title="Add to favorite restaurants" style="font-size:40px;">☆</span></button>`;
+	}
+
+	const name = document.getElementById(`restaurant-name`);
+	if (name.innerHTML != ``) return;
+	name.innerHTML = restaurant.name;
+
+	const address = document.getElementById(`restaurant-address`);
+	address.innerHTML = restaurant.address;
+
+	const imageFileName = DBHelper.imageUrlForRestaurant(restaurant).replace(/\.[^/.]+$/, ``);
+	/*const imageFileExtension = DBHelper.imageUrlForRestaurant(restaurant).split(`.`).pop();*/
+	const imageContainer = document.getElementById(`img-container`);
+	imageContainer.innerHTML = `${toggleButton}<picture>
+			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="100vw" type="image/webp"></source>
+			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.webp 400w, ${imageFileName}-800.webp 800w" sizes="50vw" type="image/webp"></source>
+			<source class="lazy"  media="(max-width: 600px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w" sizes="100vw" type="image/jpeg"></source>
+			<source class="lazy"  media="(min-width: 600px)"  data-srcset="${imageFileName}-400.jpg 400w, ${imageFileName}-800.jpg 800w" sizes="50vw" type="image/jpeg"></source>
+			<img class="lazy" src="assets/img/placeholder-image-800.webp" data-src="${imageFileName}-800.jpg" alt="${restaurant.name}'s restaurant photo">
+		</picture>`;
+
+	const cuisine = document.getElementById(`restaurant-cuisine`);
+	cuisine.innerHTML = restaurant.cuisine_type;
+
+	// fill operating hours
+	if (restaurant.operating_hours) {
+		fillRestaurantHoursHTML();
+	}
+	// fill reviews
+	fillReviewsHTML(restaurant);
+}
+
+/**
+ * Create restaurant operating hours HTML table and add it to the webpage.
+ */
+function fillRestaurantHoursHTML(operatingHours = self.restaurant.operating_hours) {
+	const table = document.getElementById(`restaurant-hours`);
+	for (let key in operatingHours) {
+		const row = document.createElement(`tr`);
+		row.innerHTML = `<th scope="row">${key}</th><td>${operatingHours[key].replace(/,/g,`<br>`)}</td>`;
+		table.appendChild(row);
+	}
+}
+
+/**
+ * Create all reviews HTML and add them to the webpage.
+ */
+function fillReviewsHTML(restaurant) {
+	DBHelper.fetchReviews(restaurant.id).then(reviews => {
+		const container = document.getElementById(`reviews-list`);
+		if (!reviews) {
+			const noReviews = document.createElement(`p`);
+			noReviews.innerHTML = `No reviews yet!`;
+			container.appendChild(noReviews);
+			return;
+		}
+		reviews.forEach(review => {
+			container.appendChild(createReviewHTML(review));
+		});
+	});
+	enableLazyLoading();
+}
+
+/**
+ * Create review HTML and add it to the webpage.
+ */
+function createReviewHTML(review) {
+	const article = document.createElement(`article`);
+	const options = {
+		day: `2-digit`,
+		//weekday: `long`,
+		year: `2-digit`,
+		month: `2-digit`,
+	};
+	review.date = review.updatedAt ? new Date(review.updatedAt).toLocaleString(`es-es`, options) : `Now`;
+	article.id = `review-${review.id}`;
+	article.innerHTML = `
+		<author>${review.name}</author>
+		<time datetime="${review.date}">${review.date}</time>
+		<meter class="meter-5-hearth" max="5" value="${review.rating}"></meter>
+		<span role="presentation" aria-label="Rating ${review.rating} out of 5" data-value="${review.rating}"></span>
+		<p>${review.comments}</p>`;
+	return article;
+}
+
+/**
+ * Get a parameter by name from page URL.
+ */
+function getParameterByName(name, url) {
+	if (!url)
+		url = window.location.href;
+	name = name.replace(/[[]]/g, `\\$&`);
+	const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
+		results = regex.exec(url);
+	if (!results)
+		return null;
+	if (!results[2])
+		return ``;
+	return decodeURIComponent(results[2].replace(/\+/g, ` `));
+}
+
+function enableLazyLoading() {
+	var lazyImages = [].slice.call(document.querySelectorAll(`.lazy`));
+	if (`IntersectionObserver` in window) {
+		let lazyImageObserver = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					let lazyImage = entry.target;
+					if (lazyImage.dataset.src) lazyImage.src = lazyImage.dataset.src;
+					if (lazyImage.dataset.srcset) lazyImage.srcset = lazyImage.dataset.srcset;
+					lazyImage.classList.remove(`lazy`);
+					lazyImageObserver.unobserve(lazyImage);
+				}
+			});
+		});
+		lazyImages.forEach(lazyImage => lazyImageObserver.observe(lazyImage));
+	} else {
+		// Possibly fall back to a more compatible method here
+	}
+}

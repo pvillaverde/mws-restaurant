@@ -1,4 +1,4 @@
-const staticCacheName = `restaurants-static-v47`;
+const staticCacheName = `restaurants-static-v54`;
 const contentImgsCache = `restaurants-content-imgs`;
 const allCaches = [staticCacheName, contentImgsCache];
 
@@ -35,6 +35,27 @@ self.addEventListener(`message`, function(event) {
 		self.skipWaiting();
 	}
 });
+
+/* Wait for sync events */
+self.addEventListener(`sync`, (event) => {
+	event.waitUntil(
+		isOnline().then(() =>
+			clients.matchAll()
+			.then(clients => clients.forEach(client => client.postMessage({
+				'action': `sync`,
+				'tag': event.tag
+			}))))
+		.catch(error => console.error(error))
+	);
+});
+
+function isOnline() {
+	return new Promise((resolve, reject) => {
+		if (navigator.onLine) resolve();
+		else reject(`offline`);
+	}).catch(isOnline);
+}
+
 /* Deleting older caches on activate*/
 self.addEventListener(`activate`, (event) => {
 	event.waitUntil(

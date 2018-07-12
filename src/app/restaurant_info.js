@@ -1,5 +1,6 @@
 let restaurant;
 var map;
+const syncStore = {};
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -40,7 +41,34 @@ document.addEventListener(`DOMContentLoaded`, ( /*event*/ ) => {
 			container.appendChild(createReviewHTML(review));
 		}
 	});
+	if (navigator.serviceWorker) {
+		navigator.serviceWorker.addEventListener(`message`, message => {
+			if (message.data.action === `sync`) {
+				const syncObject = syncStore[message.data.tag];
+				delete syncStore[message.data.tag];
+				syncObject.callback(...syncObject.params);
+			}
+		});
+	}
 });
+
+/**
+ * Ask for a sync event
+ */
+function sendSyncRequest(tag, callback, ...params) {
+	showSnackbar(`Changes couldn't be saved. Retrying...`);
+	if (navigator.serviceWorker) {
+		const id = DBHelper.uuid();
+		syncStore[id] = {
+			'callback': callback,
+			'params': params
+		};
+		navigator.serviceWorker.ready
+			.then(reg => reg.sync.register(id));
+	} else {
+		setTimeout(() => callback(...params), 3000);
+	}
+}
 
 function sendNewReview(review, container) {
 	DBHelper.addNewReview(review)
@@ -50,10 +78,7 @@ function sendNewReview(review, container) {
 			container.appendChild(createReviewHTML(savedReview));
 			showSnackbar(`Review added succesfully!`);
 		})
-		.catch(() => {
-			showSnackbar(`Review couldn't be added. Retrying...`);
-			setTimeout(() => sendNewReview(review, container), 3000);
-		});
+		.catch(() => sendSyncRequest(`addReview`, review, container));
 }
 
 function toggleFavorite() {
@@ -74,10 +99,7 @@ function updateFavoriteRestaurant(restaurant) {
 			self.restaurant = savedRestaurant;
 			showSnackbar(`Restaurant ${savedRestaurant.is_favorite ==`true` ? `marked` : `unmarked`} as favorite`);
 		})
-		.catch(() => {
-			showSnackbar(`Changes couldn't be saved. Retrying...`);
-			setTimeout(() => updateFavoriteRestaurant(restaurant), 3000);
-		});
+		.catch(() => sendSyncRequest(`updateFavorite`, updateFavoriteRestaurant, restaurant));
 }
 
 function showSnackbar(text) {
